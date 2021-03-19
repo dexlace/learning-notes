@@ -1473,4 +1473,68 @@ dataSource属性值指定将要==引用的持久化数据库的bean名称==，==
 
 费，则会自动持久化到数据库中。
 
+### 七、ActiveMQ的zookeeper集群
 
+#### 7.1 集群原理
+
+#### 7.2 集群安装
+
+> 步骤一：zookeeper的集群安装略过，实在是太熟了
+
+> 步骤二：activemq的单机安装，略
+
+> 步骤三：如果是伪集群安装，需要==修改`conf/jetty.xml`中的bean id为`jettyPort`的bean的port属性值==，以达到分别==访问各个节点的控制台==的目的；这里默认非伪集群，所以不修改
+
+> 步骤四：修改`activemq.xml`中的==brokerName==为同样的名字
+
+> 步骤五：修改`activemq.xml`中的==persistenceAdapter==为以下内容
+
+```xml
+<persistenceAdapter>
+   <replicatedLevelDB
+		directory="${activemq.data}/leveldb"
+		replicas="3"
+		bind="tcp://0.0.0.0:63631"
+		zkAddress="192.168.205.104:2181,192.168.205.105:2182,192.168.205.106:2183"
+		hostname="localhost"
+		zkPath="/activemq/leveldb-stores"
+	/>
+</persistenceAdapter>
+
+```
+
+> 具体解释如下：
+>
+> ```properties
+> directory：持久化数据路径
+> 
+> replicas：当前主从模型中的节点数，根据实际配置
+> 
+> bind：主从实例间的通讯端口。
+> 
+> zkAddress：zookeeper应用的安装位置，注意伪集群时的配置
+> 
+> hostname：ActiveMQ实例安装的实际linux主机名
+> 
+> zkPath：ActiveMQ的主从信息保存在zookeeper中的什么目录
+> ```
+
+> 步骤六：如果是==伪集群安装==，修改`activemq.xml`中的==tcp传输协议使用的默认61616端口==为==多个不同的端口==，本文非伪集群，不需要修改
+
+#### 7.3 集群测试
+
+> ==启动测试==
+
+- 启动zookeeper集群，`zkServer.sh status` 查看启动情况
+- 启动activemq集群，`activemq status` 查看启动情况
+- 连接一台zookeeper服务器，`zkCli.sh  -server  zookeeper服务器地址：端口号`
+- 查看acticvemq是否成功注册到zookeeper
+
+![image-20210320015758143](activeMQ.assets/image-20210320015758143.png)
+
+可以看到三台activeMQ节点分别为：00000000000, 00000000001, 00000000002。
+
+分别查看这三个节点的主从状态，`get /activemq/leveldb-stores/00000000000、get /activemq/leveldb-stores/00000000001、get /activemq/leveldb-stores/00000000002`。
+![image-20210320020023286](activeMQ.assets/image-20210320020023286.png)
+
+可以看到仅仅00000000000节点的`elected`属性值不为null，则表示00000000000为Master，其他两个节点为Slave。
