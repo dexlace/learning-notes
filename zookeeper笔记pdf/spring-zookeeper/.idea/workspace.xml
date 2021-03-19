@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0d61a7e9-230c-44f8-b3fa-4407f059bc11" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="D:\softwareOfDevelopment\repository" />
+        <option name="mavenHome" value="D:/softwareOfDevelopment/apache-maven-3.3.9" />
+        <option name="userSettingsFile" value="D:\softwareOfDevelopment\apache-maven-3.3.9\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1p4Poevq1PlS9PS1QKdRcRftEhE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunManager" selected="Application.TicketSeller">
+    <configuration name="GloballyUniqueId" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.zookeeper.test.cases.GloballyUniqueId" />
+      <module name="spring-zookeeper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.zookeeper.test.cases.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MyZkConnect" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.zookeeper.test.MyZkConnect" />
+      <module name="spring-zookeeper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.zookeeper.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TicketSeller" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.zookeeper.test.cases.lock.TicketSeller" />
+      <module name="spring-zookeeper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.zookeeper.test.cases.lock.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ZKConnectionWatcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.zookeeper.test.watcher.ZKConnectionWatcher" />
+      <module name="spring-zookeeper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.zookeeper.test.watcher.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ZKWatcherExists" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.zookeeper.test.watcher.ZKWatcherExists" />
+      <module name="spring-zookeeper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.zookeeper.test.watcher.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ZookeeperMain" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="spring-zookeeper" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.scct.zookeeper.ZookeeperMain" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.GloballyUniqueId" />
+      <item itemvalue="Application.MyZkConnect" />
+      <item itemvalue="Application.TicketSeller" />
+      <item itemvalue="Application.ZKConnectionWatcher" />
+      <item itemvalue="Application.ZKWatcherExists" />
+      <item itemvalue="Spring Boot.ZookeeperMain" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TicketSeller" />
+        <item itemvalue="Application.GloballyUniqueId" />
+        <item itemvalue="Application.ZKWatcherExists" />
+        <item itemvalue="Application.ZKConnectionWatcher" />
+        <item itemvalue="Application.MyZkConnect" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0d61a7e9-230c-44f8-b3fa-4407f059bc11" name="Default Changelist" comment="" />
+      <created>1614439565891</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1614439565891</updated>
+      <workItem from="1614439568470" duration="4796000" />
+      <workItem from="1614497340619" duration="40000" />
+      <workItem from="1614514237481" duration="41857000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-1742" y="-326" key="#Project_Structure" timestamp="1614440632558">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state x="-1742" y="-326" key="#Project_Structure/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614440632558" />
+    <state x="-2251" y="-440" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1614755450933">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state x="-2251" y="-440" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614755450933" />
+    <state x="-1901" y="-392" key="#com.intellij.ide.util.MemberChooser" timestamp="1614699922686">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state x="-1901" y="-392" key="#com.intellij.ide.util.MemberChooser/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614699922686" />
+    <state width="1663" height="642" key="GridCell.Tab.0.bottom" timestamp="1614759276364">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="1663" height="642" key="GridCell.Tab.0.bottom/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614759276364" />
+    <state width="1663" height="642" key="GridCell.Tab.0.center" timestamp="1614759276364">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="1663" height="642" key="GridCell.Tab.0.center/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614759276364" />
+    <state width="1663" height="642" key="GridCell.Tab.0.left" timestamp="1614759276364">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="1663" height="642" key="GridCell.Tab.0.left/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614759276364" />
+    <state width="1663" height="642" key="GridCell.Tab.0.right" timestamp="1614759276364">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="1663" height="642" key="GridCell.Tab.0.right/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614759276364" />
+    <state x="-2176" y="-440" key="Maven.ArtifactSearchDialog" timestamp="1614441094518">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state x="-2176" y="-440" key="Maven.ArtifactSearchDialog/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614441094518" />
+    <state x="-1539" y="-322" width="672" height="678" key="search.everywhere.popup" timestamp="1614740979219">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state x="-1539" y="-322" width="672" height="678" key="search.everywhere.popup/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1614740979219" />
+  </component>
+</project>
