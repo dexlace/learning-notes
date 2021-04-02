@@ -1483,7 +1483,9 @@ dataSource属性值指定将要==引用的持久化数据库的bean名称==，==
 
 > 步骤二：activemq的单机安装，略
 
-> 步骤三：如果是伪集群安装，需要==修改`conf/jetty.xml`中的bean id为`jettyPort`的bean的port属性值==，以达到分别==访问各个节点的控制台==的目的；这里默认非伪集群，所以不修改
+> 步骤三：需要==修改`conf/jetty.xml`中的bean id为`jettyPort`的bean的port属性值==，以达到分别==访问各个节点的控制台==的目的；
+>
+> 注意：==必须改，即使不在同一个机子上，也必须改==
 
 > 步骤四：修改`activemq.xml`中的==brokerName==为同样的名字
 
@@ -1494,14 +1496,44 @@ dataSource属性值指定将要==引用的持久化数据库的bean名称==，==
    <replicatedLevelDB
 		directory="${activemq.data}/leveldb"
 		replicas="3"
-		bind="tcp://0.0.0.0:63631"
-		zkAddress="192.168.205.104:2181,192.168.205.105:2182,192.168.205.106:2183"
-		hostname="localhost"
+		bind="tcp://192.168.205.104:63631"
+		zkAddress="192.168.205.104:2181,192.168.205.105:2181,192.168.205.106:2181"
+		hostname="192.168.205.104" 
 		zkPath="/activemq/leveldb-stores"
 	/>
 </persistenceAdapter>
 
 ```
+
+```xml
+<persistenceAdapter>
+   <replicatedLevelDB
+		directory="${activemq.data}/leveldb"
+		replicas="3"
+		bind="tcp://192.168.205.105:63631"
+		zkAddress="192.168.205.104:2181,192.168.205.105:2181,192.168.205.106:2181"
+		hostname="192.168.205.105" 
+		zkPath="/activemq/leveldb-stores"
+	/>
+</persistenceAdapter>
+
+```
+
+```xml
+<persistenceAdapter>
+   <replicatedLevelDB
+		directory="${activemq.data}/leveldb"
+		replicas="3"
+		bind="tcp://192.168.205.106:63631"
+		zkAddress="192.168.205.104:2181,192.168.205.105:2181,192.168.205.106:2181"
+		hostname="192.168.205.106" 
+		zkPath="/activemq/leveldb-stores"
+	/>
+</persistenceAdapter>
+
+```
+
+
 
 > 具体解释如下：
 >
@@ -1523,7 +1555,7 @@ dataSource属性值指定将要==引用的持久化数据库的bean名称==，==
 
 #### 7.3 集群测试
 
-> ==启动测试==
+> ==一、启动测试==
 
 - 启动zookeeper集群，`zkServer.sh status` 查看启动情况
 - 启动activemq集群，`activemq status` 查看启动情况
@@ -1538,3 +1570,68 @@ dataSource属性值指定将要==引用的持久化数据库的bean名称==，==
 ![image-20210320020023286](activeMQ.assets/image-20210320020023286.png)
 
 可以看到仅仅00000000000节点的`elected`属性值不为null，则表示00000000000为Master，其他两个节点为Slave。
+
+
+
+> ==二、可用性测试==
+
+Slave不接受client连接，==client只与Master连接==，所以客户端连接的Broker应该==使用failover协议（失败转移）==。
+
+由以上连接测试可知，==Master为00000000000节点，该节点访问消息端口为61616，访问控制台（client）端口为8161==。所以通过浏览器打开控制台只能使用8161，同样的，使用`lsof -i:<端口>`命令查看ActiveMQ服务启动情况，只能查看到==192.168.205.104:61616端口的服务在监听着。==
+
+
+
+> ==三、代码连通性测试，以与springboot整合为例==
+>
+> 只需修改application.yml即可，即将==broker-url改成`failover:(tcp://192.168.205.104:61616,tcp://192.168.205.105:61616,tcp://192.168.205.106:61616)`==其余代码不用变
+
+```yml
+server:
+  port: 7777
+spring:
+  activemq:
+    #你的activemq连接地址
+#    broker-url: tcp://192.168.205.103:61616
+    broker-url: failover:(tcp://192.168.205.104:61616,tcp://192.168.205.105:61616,tcp://192.168.205.106:61616)
+    #账号
+    user: admin
+    #密码
+    password: admin
+  jms:
+    #指定连接的是队列(Queue)还是主题(Topic)，false代表队列,true代表主题
+    # 默认是false
+    pub-sub-domain: false
+    template:
+      delivery-mode: persistent
+
+
+# 自定义的队列和主题的名字
+queue:
+  name: jdbc-queue
+
+topic:
+  name: boot-topic-test
+
+```
+
+![image-20210320110847216](activeMQ.assets/image-20210320110847216.png)
+
+==可知只连接master==
+
+
+
+> ==四、测试master选举==
+
+![image-20210320190858580](activeMQ.assets/image-20210320190858580.png)
+
+192.168.205.104机器上的activemq为master，61616端口正在监听，干掉监听的进程
+
+![image-20210320191027073](activeMQ.assets/image-20210320191027073.png)
+
+==发现新王登基==
+
+<img src="activeMQ.assets/image-20210320193035914.png" alt="image-20210320193035914" style="zoom:80%;" />
+
+旧王重新上线，已经不复荣光，==生成新的节点，为slave==
+
+<img src="activeMQ.assets/image-20210320193307116.png" alt="image-20210320193307116" style="zoom:80%;" />

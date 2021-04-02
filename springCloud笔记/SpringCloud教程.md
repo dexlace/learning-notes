@@ -1,4 +1,4 @@
-#  SpringCloud教程
+SpringCloud教程
 
 ## 一、前言
 
@@ -1106,7 +1106,7 @@ public class CustomerFeignController {
 
 <img src="images/1597468071030.png" alt="1597468071030" style="zoom:80%;" />
 
-## 中级部分
+## ==中级部分==
 
 > 主要是==服务降级、服务熔断、服务限流==的开发思想和框架实现
 
@@ -1875,11 +1875,11 @@ public class GateWayFilter implements GlobalFilter, Ordered {
 
 ![1597643368929](G:/%25E7%2599%25BE%25E5%25BA%25A6%25E4%25BA%2591%25E5%25AD%2598%25E5%2582%25A8/springCloud/images/1597643368929.png)
 
-![1597643414093](/images/1597643414093.png)
+![1597643414093](images/1597643414093.png)
 
-![1597643478588](/images/1597643478588.png)
+![1597643478588](images/1597643478588.png)
 
-![1597643504380](/images/1597643504380.png)
+![1597643504380](images/1597643504380.png)
 
 ### 10.2 服务端配置
 
@@ -1947,7 +1947,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/dexlace/springcloud-config.git # github 仓库位置
+          uri: https://github.com/dexlace/springcloud-config.git # github 仓库位置，不建议用ssh那个版本的地址
           ## 搜索目录
           search-paths:
             - springcloud-config
@@ -2146,6 +2146,2145 @@ management:
 
 成功！
 
-但是又有一个问题，就是要向每个微服务发送一次POST请求，当微服务数量庞大，又是一个新的问题。
+但是又有一个问题，就是要==向每个微服务发送一次POST请求==，==当微服务数量庞大，又是一个新的问题。==
 
 就有下面的消息总线！
+
+## 十一、消息总线
+
+### 11.1 简介
+
+![1597651086179](SpringCloud%E6%95%99%E7%A8%8B.assets/1597651086179.png)
+
+![1597651183100](SpringCloud%E6%95%99%E7%A8%8B.assets/1597651183100.png)
+
+==前提安装RabbitMQ==,略
+
+### 11.2 广播式刷新配置
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597723463350.png" alt="1597723463350" style="zoom:80%;" />
+
+#### 11.2.1 Config Server配置
+
+> 以cloud-config-center3344为例改造config server
+>
+> ==一、添加依赖，该依赖其实client也需要添加==
+
+``` xml
+<!-- 添加rabbitMQ的消息总线支持包 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+        </dependency>
+```
+
+> 二、application.yml增加如下配置
+>
+> ==主要是关于rabbitmq的配置和bus刷新暴露的端点==
+>
+> 整个yml文件如下：
+
+```yml
+server:
+  port: 3344
+spring:
+  application:
+    name: cloud-config-center  # 注册进eureka Server 的微服务名
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/dexlace/springcloud-config.git # github 仓库位置
+          ## 搜索目录
+          search-paths:
+            - springcloud-config
+          # 读取的分支
+          label: master
+  # rabbitMq的相关配置
+  rabbitmq:
+    host: 192.168.205.107
+    port: 5672  # 这里没错，虽然rabbitMQ网页是 15672
+    username: guest
+    password: guest
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001:7001/eureka/,http://eureka7002:7002/eureka/
+
+
+# rabbitmq 的相关配置2 暴露bus刷新配置的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'bus-refresh'
+```
+
+其他照旧，具体参照第十章的内容
+
+#### 11.2.2 Config Client配置
+
+> 一、添加依赖，和Config Server的一样
+
+```xml
+<!-- 添加rabbitMQ的消息总线支持包 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+        </dependency>
+```
+
+> 二、Client的bootstrap文件配置如下
+>
+> 复制了一份，重建了一个微服务，端口号是3366，这里以端口号3355为例，二者除了端口号没区别
+
+```yml
+server:
+  port: 3355
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    # config 客户端配置
+    config:
+      label: master # 分支名称
+      name: config # 配置文件名称
+      profile: dev # 使用配置环境
+      uri: http://config-3344:3344  # config Server 地址
+      # 综合上面四个 即读取配置文件地址为： http://config-3344:3344/master/config-dev.yml
+  rabbitmq:
+    host: 192.168.205.107
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001:7001/eureka/,http://eureka7002:7002/eureka/
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+```
+
+可在github上修改yml文件进行测试，修改完文件，向 config server 发送 请求：
+
+==【curl -X POST "http://localhost:3344/actuator/bus-refresh"】==
+
+> 注意，之前是==向config client 一个个发送请求==，但是这次是==向 config Server 发送请求==，而所有的config client 的配置也都全部更新。
+
+注：这是在rabbitmq上注册的virtual host
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210321205051579.png" alt="image-20210321205051579" style="zoom:67%;" />
+
+### 11.3 定点通知
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597725204568.png" alt="1597725204568" style="zoom:80%;" />
+
+![1597725365978](images\1597725365978.png)
+
+## 十二、消息驱动
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597725567239.png" alt="1597725567239" style="zoom: 67%;" />
+
+> ==屏蔽底层消息中间件的差异==，降低切换成本，统一消息的编程模型
+
+> 官方定义的Spring Cloud Stream是一个构建==消息驱动微服务的框架==
+>
+> 应用程序通过==input或者output==来与Spring Cloud Stream中的==binder对象交互==
+>
+> 通过我们配置来binding(绑定)，而Sping Cloud Steam的==binder对象==负责==与消息中间贱进行交互==
+>
+> 所以，我们只需要搞清楚如何与Spring Cloud Stream交互就可以方便的使用消息驱动方式
+>
+> Spring Cloud Stream为一些供应商的消息中间件产品提供了个性化的自动化配置实现，引用了==发布-订阅、消费组、分区==的三个核心概念。
+
+<font color=red>目前只支持RabbitMQ、Kafka</font>
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597726446212.png" alt="1597726446212" style="zoom:80%;" />
+
+<img src="images\1597730581088.png" alt="1597730581088" style="zoom:80%;" />
+
+### 12.1 消息生产者
+
+新建模块 cloud-stream-rabbitmq-provider8801 
+
+> ==pom文件==
+
+```xml
+ <!-- stream-rabbit -->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+    </dependency>
+    <!--eureka-client 目前，这个不是必须的-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency><!-- 引入自己定义的api通用包，可以使用Payment支付Entity -->
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+```
+
+==application.yml==
+
+> 注意要==配置rabbitmq选项==，而==不只是在stream中配置==
+
+```yml
+
+server:
+  port: 8801
+spring:
+  rabbitmq:
+    host: 192.168.205.107
+    port: 5672
+    username: guest
+    password: guest
+  application:
+    name: cloud-stream-provider
+  cloud:
+    stream:
+      binders: # 在次配置要绑定的rabbitMQ的服务信息
+        defaultRabbit: # 表示定义的名称，用于和binding整合
+          type: rabbit  # 消息组件类型
+          environment:  # 设置rabbitmq的相关环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.205.107
+                port: 5672
+                username: guest
+                password: guest
+      bindings:  # 服务的整合处理
+        output:   # 表示是生产者，向rabbitMQ发送消息
+          destination: studyExchange  # 表示要使用的Exchange名称
+          content-type: application/json  # 设置消息类型，本次是json，文本是 "text/plain"
+          binder: defaultRabbit  # 设置要绑定的消息服务的具体配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001:7001/eureka/,http://eureka7002:7002/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 2 # 设置心跳时间，默认是30秒
+    lease-expiration-duration-in-seconds: 5 # 最大心跳间隔不能超过5秒,默认90秒
+    instance-id: send-8801.com # 在信息列表显示主机名称
+    prefer-ip-address: true # 访问路径变为ip地址
+
+
+```
+
+主启动类没什么特殊的注解。
+
+>  ==业务类==：（此业务类不是以前的service，而实负责推送消息的服务类）用的是==@EnableBingding注解==
+
+```java
+package com.atguigu.springcloud.service.impl;
+
+import com.atguigu.springcloud.service.IMessageProvider;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
+
+import javax.annotation.Resource;
+import java.util.UUID;
+
+
+/**
+ * @Author: xiaogongbing
+ * @Description:
+ * @Date: 2021/3/22
+ */
+@EnableBinding(Source.class) //定义消息的推送管道
+public class IMessageProviderImpl implements IMessageProvider {
+
+    @Resource
+    private MessageChannel output; // 消息发送管道
+
+    @Override
+    public String send() {
+        String serial= UUID.randomUUID().toString();
+        output.send(MessageBuilder.withPayload(serial).build());
+        System.out.println("***serial: " + serial);
+        return null;
+    }
+}
+
+```
+
+> controller
+
+```java
+@RestController
+public class SendMessageController {
+
+    @Resource
+    private IMessageProvider messageProvider;
+
+    @GetMapping("/sendMessage")
+    public String sendMessage(){
+        return messageProvider.send();
+    }
+}
+```
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210323162735398.png" alt="image-20210323162735398" style="zoom:80%;" />
+
+### 12.2 消息消费者
+
+新建模块 cloud-stream-rabbitmq-consumer8802
+
+pom依赖和生产者一样。
+
+yml配置: 在 stream的配置上，和生产者只有一处不同的地方，==output 改成 input==
+
+```yml
+
+server:
+  port: 8802
+spring:
+  rabbitmq:
+    host: 192.168.205.107
+    port: 5672
+    username: guest
+    password: guest
+  application:
+    name: cloud-stream-consumer
+  cloud:
+    stream:
+      binders: # 在次配置要绑定的rabbitMQ的服务信息
+        defaultRabbit: # 表示定义的名称，用于和binding整合
+          type: rabbit  # 消息组件类型
+          environment:  # 设置rabbitmq的相关环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.205.107
+                port: 5672
+                username: guest
+                password: guest
+      bindings:  # 服务的整合处理
+        input:   # 表示是生产者，向rabbitMQ发送消息
+          destination: studyExchange  # 表示要使用的Exchange名称
+          content-type: application/json  # 设置消息类型，本次是json，文本是 "text/plain"
+          binder: defaultRabbit  # 设置要绑定的消息服务的具体配置
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001:7001/eureka/,http://eureka7002:7002/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 2 # 设置心跳时间，默认是30秒
+    lease-expiration-duration-in-seconds: 5 # 最大心跳间隔不能超过5秒,默认90秒
+    instance-id: send-8801.com # 在信息列表显示主机名称
+    prefer-ip-address: true # 访问路径变为ip地址
+```
+
+> 接收消息的业务类
+>
+> 主要是==@EnableBinding(Sink.class)==
+>
+> ==@StreamListener(Sink.INPUT)==
+
+```yml
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.messaging.Message;
+import org.springframework.stereotype.Component;
+
+@Component
+@EnableBinding(Sink.class)
+public class ConsumerController {
+
+    @Value("${server.port}")
+    private String serverPort;
+
+    @StreamListener(Sink.INPUT)
+    public void input(Message<String> message){
+        System.out.println("消费者1号，serverport: " + serverPort + "，接受到的消息：" + message.getPayload());
+    }
+}
+```
+
+### 12.3 配置分组消费
+
+新建 cloud-stream-rabbitmq-consumer8802 模块：
+
+> 8803 就是 8802 clone出来的。
+
+当运行时，会有两个问题。
+
+第一个问题，两个消费者都接收到了消息，这属于重复消费。例如，消费者进行订单创建，这样就创建了两份订单，会造成系统错误。
+
+![1597731525531](SpringCloud%E6%95%99%E7%A8%8B.assets/1597731525531.png)
+
+> Stream默认不同的微服务是不同的组
+
+![1597731630685](SpringCloud%E6%95%99%E7%A8%8B.assets/1597731630685.png)
+
+对于重复消费这种问题，导致的原因是默认每个微服务是不同的group，==组流水号不一样，所以被认为是不同组，两个都可以消费。==
+
+解决的办法就是自定义配置分组：
+
+消费者 yml 文件配置：
+
+```yml
+	# 8802 的消费者
+	bindings:
+        input:   
+          destination: studyExchange  
+          content-type: application/json  
+          binder: defaultRabbit  
+          group: juddy  # 自定义分组配置
+    # 8803 的消费者
+	bindings:
+        input:   
+          destination: studyExchange  
+          content-type: application/json  
+          binder: defaultRabbit  
+          group: buddy  # 自定义分组配置
+```
+
+另外：
+
+> ==加上了group配置，就已经实现了消息的持久化==
+
+> 分布式请求链路跟踪，超大型系统。需要在微服务模块极其多的情况下，比如80调用8001的，8001调用8002的，这样就形成了一个链路，如果链路中某环节出现了故障，我们可以使用Sleuth进行链路跟踪，从而找到出现故障的环节。
+
+## 十三、链路追踪-Sleuth
+
+> 分布式请求链路跟踪，超大型系统。需要在微服务模块极其多的情况下，比如80调用8001的，8001调用8002的，这样就形成了一个链路，如果链路中某环节出现了故障，我们可以使用Sleuth进行链路跟踪，从而找到出现故障的环节。
+
+### 13.1 简介
+
+<img src="images/1597732562780.png" alt="1597732562780" style="zoom:80%;" />
+
+> sleuth 负责跟踪，而zipkin负责展示。
+>
+> zipkin 下载地址： http://dl.bintray.com/openzipkin/maven/io/zipkin/java/zipkin-server/2.12.9/zipkin-server-2.12.9-exec.jar
+>
+> 使用 【java -jar】 命令运行下载的jar包，访问地址：【 http://localhost:9411/zipkin/ 】
+
+### 13.2 小case
+
+> 使用之前的 提供者8001 和 消费者80
+
+分别给他们引入依赖：
+
+```xml
+	<!-- 引入sleuth + zipkin -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+```
+
+yml增加配置：
+
+```yml
+spring:
+  zipkin:
+    base-url: http://localhost:9411  # zipkin 地址
+  sleuth:
+    sampler:
+      # 采样率值 介于0-1之间 ，1表示全部采集
+      probability: 1
+```
+
+启动==访问http://localhost:9411/zipkin/就可以看到调用链路情况==
+
+## 高级
+
+> alibaba 的 github上有中文文档
+
+![1597735215211](SpringCloud%E6%95%99%E7%A8%8B.assets/1597735215211.png)
+
+## 十四、 Spring Cloud Alibaba之Nacos
+
+### 14.1 简介
+
+> Nacos = Eureka + Config + Bus
+
+> github地址：  https://github.com/alibaba/Nacos 
+>
+> Nacos 地址：  https://nacos.io/zh-cn/ 
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597755893534.png" alt="1597755893534" style="zoom:80%;" />
+
+> nacos可以切换 AP 和 CP ,可使用如下命令切换成CP模式：
+>
+> ![1597756097369](G:/%25E7%2599%25BE%25E5%25BA%25A6%25E4%25BA%2591%25E5%25AD%2598%25E5%2582%25A8/springCloud/images/1597756097369.png)
+
+==下载：==
+
+> 下载地址：  https://github.com/alibaba/nacos/releases/tag/1.1.4 
+>
+> 直接下载网址： https://github.com/alibaba/nacos/releases/download/1.1.4/nacos-server-1.1.4.zip
+>
+> 下载压缩包以后解压，进入bin目录，打开dos窗口，执行startup命令启动它。
+>
+> 可访问 ： 【 http://192.168.101.105:8848/nacos/index.html】地址，默认账号密码都是nacos
+
+### 14.2 注册中心
+
+#### 14.2.1 提供者
+
+新建模块 cloudalibaba-provider-payment9001
+
+==pom依赖：==
+
+```xml
+	 <dependencies>
+    <!-- springcloud alibaba nacos 依赖 -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!-- springboot整合Web组件 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- 日常通用jar包 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency><!-- 引入自己定义的api通用包，可以使用Payment支付Entity -->
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+</dependencies>
+```
+
+==yml 配置：==
+
+```yml
+server:
+  port: 9001
+spring:
+  application:
+    name: nacos-payment-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+```
+
+==主启动类==
+
+```java
+// 注意注解
+@EnableDiscoveryClient
+```
+
+==业务类==,很简单，不用赘述
+
+```java
+@RestController
+public class PaymentController9001 {
+
+    @Value("${server.port}")
+    private String serverPort;
+
+    @GetMapping(value="/payment/nacos/{id}")
+    public String getPayment(@PathVariable("id") Integer id){
+        return "nacos registry, serverPort: "+serverPort+"\t id"+id;
+    }
+}
+
+```
+
+<font color=red>Nacos 自带负载均衡机制</font>，下面创建第二个提供者。
+
+新建 cloudalibaba-provider-payment9002提供者模块，clone 9001 就可以，或者==指定端口号运行多个实例就好了==
+
+#### 14.2.2 消费者
+
+新建消费者 模块： cloudalibaba-customer-order80
+
+pom依赖和主启动类没有好说的，l和提供者一致，yml依赖也是类似配置，作为消费者注册进nacos服务中心。
+
+nacos底层也是ribbon，注入ReatTemplate
+
+```java
+@Configuration
+public class ApplicationContextConfig {
+
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+}
+```
+
+controller :
+
+```java
+@RestController
+public class OrderController {
+
+    //在yml里面写的提供者服务路径，  值为：http://nacos-provider
+    @Value("${service-url.nacos-user-service}")
+    private String nacos_user_service;
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("customer/nacos/{id}")
+    public String orderId(@PathVariable("id")Integer id){
+        return restTemplate.getForObject(nacos_user_service + "/payment/nacos/" + id, String.class);
+    }
+}
+```
+
+### 14.3 配置中心
+
+> nacos还可以作为服务配置中心
+>
+> nacos 作为配置中心，不需要像springcloud config 一样做一个Server端模块。
+
+新建模块 cloudalibaba-nacos-config3377
+
+==pom依赖：==
+
+```xml
+<dependencies>
+        <!-- 以 nacos 做服务配置中心的依赖 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <!-- springcloud alibaba nacos 依赖 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- springboot整合Web组件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- 日常通用jar包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency><!-- 引入自己定义的api通用包，可以使用Payment支付Entity -->
+            <groupId>com.atguigu.springcloud</groupId>
+            <artifactId>cloud-api-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+```
+
+==主启动类，注意有@EnableDiscoveryClient注解==
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class CloudAlibabaConfigMain3377 {
+    public static void main(String[] args) {
+        SpringApplication.run(CloudAlibabaConfigMain3377.class,args);
+    }
+}
+```
+
+==bootstrap.yml配置==
+
+> 注意file-extension很不智能，支持yaml和properties，==但是yaml和yml虽然性质一样，但是要严格区分，这是nacos的问题==
+
+```yml
+server:
+  port: 3377
+spring:
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848  # nacos作为服务注册中心
+      config:
+        server-addr: localhost:8848 # nacos作为服务配置中心
+        file-extension: yml # 指定yml 格式的配置
+```
+
+==application.yml配置==
+
+```yml
+spring:
+  profiles:
+#    active: dev
+    active: test
+
+```
+
+controller 层进行读取配置测试：
+
+> 注意支持Nacos的动态刷新
+>
+> ==@RefreshScope==
+
+```java
+@RestController
+@RefreshScope  //支持Nacos的动态刷新
+public class ConfigClientController {
+
+    @Value("${config.info}")
+    private String configInfo;
+
+    @GetMapping("configclient/getconfiginfo")
+    public String getConfigInfo(){
+        return configInfo;
+    }
+}
+```
+
+<font color=red>注意以下是Nacos中添加配置文件，遵循如下规则</font>
+
+在 Nacos Spring Cloud 中，`dataId` 的完整格式如下：
+
+```plain
+${prefix}-${spring.profiles.active}.${file-extension}
+```
+
+- `prefix` 默认为 `spring.application.name` 的值，也可以通过配置项 `spring.cloud.nacos.config.prefix`来配置。
+- `spring.profiles.active` 即为当前环境对应的 profile，详情可以参考 [Spring Boot文档](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-profiles.html#boot-features-profiles)。 **注意：当 `spring.profiles.active` 为空时，对应的连接符 `-` 也将不存在，dataId 的拼接格式变成 `${prefix}.${file-extension}`**
+- `file-exetension` 为配置内容的数据格式，可以通过配置项 `spring.cloud.nacos.config.file-extension` 来配置。目前只支持 `properties` 和 `yaml` 类型。
+
+综合以上说明，Nacos 的dataid（类似文件名）应为： ==nacos-config-client-dev.yml  (必须是yml)==
+
+当修改配置值，==会发现 3377 上也已经修改，Nacos自带自动刷新功能！==而不需要运维人员的多此一举
+
+==<font color=red>Nacos的Group和namespace</font>==
+
+> Nacos 的 Group ,默认创建的配置文件，都是在DEFAULT_GROUP中，可以在创建配置文件时，给文件指定分组。
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210325181009467.png" alt="image-20210325181009467" style="zoom:80%;" />
+
+Nacos 的namespace ,默认的命名空间是public ,这个是不允许删除的，可以创建一个新的命名空间，会自动==给创建的命名空间一个流水号==。
+
+最后，dataid、group、namespace 三者关系如下：（不同的dataid，是相互独立的，不同的group是相互隔离的，不同的namespace也是相互独立的）
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597808385154.png" alt="1597808385154" style="zoom:80%;" />
+
+### 14.4 Nacos持久化
+
+> 上面只是小打小闹，下面才是真正的高级操作。
+
+<img src="images/1597808678658.png" alt="1597808678658" style="zoom:80%;" />
+
+> ==搭建集群必须持久化==，不然多台机器上的nacos的配置信息不同，造成系统错乱。它不同于单个springcloud config，没有集群一说，而且数据保存在github上，也不同于eureka，配置集群就完事了，没有需要保存的配置信息。
+>
+> Nacos默认使用它自带的嵌入式数据库derby:
+>
+> ![1597809107487](images/1597809107487.png)
+
+Nacos持久化配置：
+
+> 在 nacos的 conf目录下，有个==nacos-mysql.sql 的sql文件==，创建一个名为【nacos_config】的数据库，执行里面内容，在nacos_config数据库里面创建数据表。
+>
+> 找到conf/application.properties 文件，尾部追加如下内容：
+>
+> ```properties
+> spring.datasource.platform=mysql
+> 
+> db.num=1
+> db.url.0=jdbc:mysql://localhost:3306/nacos_config?characterEncoding=utf-8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true
+> db.user=root
+> db.password=123456
+> ```
+>
+> ==重启nacos，即完成持久化配置。==
+>
+> 注意：linux启动nacos时默认是集群启动的，如果是单机启动需要，加==-m standalone==
+
+### 14.5 集群架构
+
+> 现在进行企业中真正需要的nacos集群配置，而不是上面的单机模式，需要准备如下：
+>
+> 一台linux虚拟机：nginx服务器，3个nacos服务，一个mysql数据库。
+>
+> nginx的安装参考之前学，使用 ContOs7 至少需要安装gcc库，不然无法编译安装【yum install gcc】
+>
+> nacos下载linux版本的 tar.gz 包：https://github.com/alibaba/nacos/releases/download/1.1.4/nacos-server-1.1.4.tar.gz
+>
+
+==Nacos集群配置==
+
+1. 首先对 nacos 进行==持久化操作==，操作如上面一致。
+
+2. 修改 nacos/conf 下的cluster文件，最好先复制一份，添加如下内容:
+
+   ![image-20210326234844154](SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210326234844154.png)
+
+3. 模拟三台nacos服务，编辑nacos的startup启动脚本，使他能够支持不同的端口启动多次。
+
+   这里是==伪集群==，不是在不同机器上布置nacos服务，所以==修改startup脚本==，使得其能==按照端口启动不同的实例==。
+
+   <img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210326235254248.png" alt="image-20210326235254248" style="zoom:80%;" />
+
+   ![image-20210326235357048](SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210326235357048.png)
+
+4. nginx配置负载均衡：
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210327000048304.png" alt="image-20210327000048304" style="zoom:80%;" />
+
+
+
+5. 测试完成！
+
+使用 9003 模块注册进Nacos Server 并获取它上面配置文件的信息，进行测试。
+
+## 十五、Spring Cloud Alibaba之Sentinel
+
+### 15.1 简介
+
+> sentinel在springcloud Alibaba的作用是实现==熔断和限流==
+
+Sentinel 具有以下特征:
+
+- **丰富的应用场景**：Sentinel 承接了阿里巴巴近 10 年的双十一大促流量的核心场景，例如==秒杀（即突发流量控制在系统容量可以承受的范围）、消息削峰填谷、集群流量控制、实时熔断下游不可用应用==等。
+- **完备的实时监控**：Sentinel 同时提供==实时的监控功能==。您可以在控制台中看到==接入应用的单台机器秒级数据==，甚至 500 台以下规模的集群的汇总运行情况。
+- **广泛的开源生态**：Sentinel 提供==开箱即用的与其它开源框架/库的整合模块==，例如与 Spring Cloud、Dubbo、gRPC 的整合。您只需要引入相应的依赖并进行简单的配置即可快速地接入 Sentinel。
+- **完善的 SPI 扩展点**：Sentinel ==提供简单易用、完善的 SPI 扩展接口==。您可以通过实现扩展接口来==快速地定制逻辑==。例如定制规则管理、适配动态数据源等。
+
+Sentinel 分为两个部分:
+
+- ==核心库（Java 客户端）==不依赖任何框架/库，能够运行于所有 Java 运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持。
+- ==控制台（Dashboard）==基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器。
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210327153115873.png" alt="image-20210327153115873" style="zoom:80%;" />
+
+再次厘清==熔断、降级和限流的关系==
+
+熔断强调的是==<font color=red>服务之间的调用能实现自我恢复的状态；</font>==
+
+限流是==从系统的流量入口考虑==，从进入的流量上进行限制，达到保护系统的作用；
+
+降级，是==从系统内部的平级服务或者业务的维度考虑，流量大了，可以干掉一些==，保护其他正常使用；
+
+==<font color=red>熔断是降级方式的一种；</font>==
+
+==<font color=red>降级又是限流的一种方式；</font>==
+
+三者都是为了通过一定的方式去保护流量过大时，保护系统的手段。
+
+### 15.2 简单入门案例
+
+> 新建模块cloudalibaba-sentinel-service8041，使用Nacos作为服务注册中心，测试Sentinel的功能
+
+==pom依赖：==
+
+```xml
+ <dependencies>
+        <!-- 后续做Sentinel的持久化会用到的依赖 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+        <!-- sentinel  -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+        <!-- springcloud alibaba nacos 依赖,Nacos Server 服务注册中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- springboot整合Web组件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- 日常通用jar包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency><!-- 引入自己定义的api通用包，可以使用Payment支付Entity -->
+            <groupId>com.atguigu.springcloud</groupId>
+            <artifactId>cloud-api-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+```
+
+==yml 配置：==
+
+```yml
+server:
+  port: 8401
+spring:
+  application:
+    name: cloudalibaba-sentinel-service
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册中心
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        # 配置 Sentinel Dashboard 的地址
+        dashboard: localhost:8080
+        # 默认8719 ，如果端口被占用，端口号会自动 +1，提供给 sentinel 的监控端口
+        port: 8719
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+```
+
+主启动类和简单controller：
+
+```java
+//主启动类
+@SpringBootApplication
+@EnableDiscoveryClient
+public class SentinelMain {
+    public static void main(String[] args) {
+        SpringApplication.run(SentinelMain.class,args);
+    }
+}
+
+
+// 简单controller
+@RestController
+public class FlowLimitController {
+
+    @GetMapping("/testA")
+    public String testA(){
+        return "-------testA";
+    }
+
+    @GetMapping("/testB")
+    public String testB(){
+        return "-------testB";
+    }
+
+}
+```
+
+打开sentinel的控制台，访问controller内的任意资源，即可出现对他们的监控。下面继续深入。
+
+### 15.3 流控规则
+
+**流量控制**（flow control），其原理是监控应用流量的 ==QPS（每秒请求数量）==或==并发线程数==等指标，当达到指定的阈值时对流量进行控制，以避免被瞬时的流量高峰冲垮，从而保障应用的高可用性。
+
+==名词解释：==
+
+- 资源名：resource，唯一名称，默认为请求路径
+- 针对来源：Sentinel可以针对调用者进行限流，填写微服务名，默认是default（不区分来源）
+- ==阈值类型/单机阈值==：
+- - ==QPS(每秒请求数量)==：当调用该api的QPS达到阈值时，进行限流
+  - ==线程数==：当调用该api的线程数达到阈值时，进行限流，==可以在某个访问的资源里面sleep一下测试效果==
+- 是否集群：不需要集群
+- ==流控模式==：
+- - ==直接==：api达到限流条件时，直接限流
+  - ==关联==：当关联的资源达到阈值时，限流自己
+  - ==链路==：只记录指定链路上的流量（指定资源从入口资源进来的流量，如果达到阈值，就进行限流）、
+- ==流控效果==：
+- - ==快速失败==：直接失败，抛出异常
+  - ==warm up==：根据coldFactor（冷加载因子，默认值为3）的值，从==阈值/coldFactor==，经过==预热时长==，才达到设置的QPS阈值
+  - ==排队等待==：严格控制请求通过的间隔时间，也即是让请求以均匀的速度通过，对应的是漏桶算法
+
+#### 15.3.1 流控模式
+
+==流控模式--直接==：
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597819546992.png" alt="1597819546992" style="zoom:80%;" />
+
+> 限流表现：当超过阀值，就会被降级。
+>
+> ![1597819613273](SpringCloud%E6%95%99%E7%A8%8B.assets/1597819613273.png)
+
+==流控模式--关联：==
+
+<img src="images/1597819976569.png" alt="1597819976569" style="zoom: 67%;" />
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597820015308-1616838530911.png" alt="1597820015308" style="zoom:80%;" />
+
+#### 15.3.2 流控效果
+
+==warm up==
+
+即预热/冷启动方式。当系统长期处于低水位的情况下，当流量突然增加时，直接把系统拉升到高水位可能瞬间把系统压垮。==通过"冷启动"，让通过的流量缓慢增加==，在==一定时间内逐渐增加到阈值上限==，给冷系统一个预热的时间，避免冷系统被压垮。
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210328095554443.png" alt="image-20210328095554443" style="zoom:80%;" />
+
+<img src="images\1597820534168.png" alt="1597820534168" style="zoom:80%;" />
+
+==排队等待：==
+
+会严格控制请求通过的间隔时间，也即是让请求以均匀的速度通过，对应的是漏桶算法。详细文档可以参考 [流量控制 - 匀速器模式](https://github.com/alibaba/Sentinel/wiki/流量控制-匀速排队模式)，具体的例子可以参见 [PaceFlowDemo](https://github.com/alibaba/Sentinel/blob/master/sentinel-demo/sentinel-demo-basic/src/main/java/com/alibaba/csp/sentinel/demo/flow/PaceFlowDemo.java)。
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210328100235816.png" alt="image-20210328100235816" style="zoom:80%;" />
+
+这种方式主要用于处理间隔性突发的流量，例如消息队列。想象一下这样的场景，在某一秒有大量的请求到来，而接下来的几秒则处于空闲状态，我们希望系统能够在接下来的空闲期间逐渐处理这些请求，而不是在第一秒直接拒绝多余的请求。
+
+> 注意：匀速排队模式暂时不支持 QPS > 1000 的场景。
+
+### 15.4 熔断降级
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210328104455976.png" alt="image-20210328104455976" style="zoom: 67%;" />
+
+#### 15.4.1 RT（平均响应时间，秒级）
+
+- ==慢调用比例== (`SLOW_REQUEST_RATIO`)：选择以慢调用比例作为阈值，需要设置允许的==慢调用 RT（即最大的响应时间）==，==请求的响应时间大于该值则统计为慢调用==。当单位统计时长（`statIntervalMs`）内==<font color=red>请求数目大于设置的最小请求数目，并且慢调用的比例大于阈值</font>==，则接下来的熔断时长内请求会自动被熔断。经过==熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态）==，若接下来的一个==请求响应时间小于设置的慢调用 RT 则结束熔断，若大于设置的慢调用 RT 则会再次被熔断==。
+- - <font color=red>平均响应时间超出阈值</font>
+  - <font color=red>时间窗口期内通过的请求数>=5</font>
+- ==窗口期过后关闭断路器==
+- RT最大4900（更大的需要通过-Dcsp.sentinel.statistic.max.rt=xxx才能生效）
+
+#### 15.4.2 异常比例（秒级）
+
+- 针对的是==调用异常（比如除0的溢出）==
+- - ==QPS>=5,==
+  - ==异常比例（秒级统计）超过阈值时，触发降级==
+- 时间窗口结束后，关闭降级
+
+#### 15.4.3 异常数
+
+- 针对的是==调用异常==
+- - ==近1分钟的异常数目超过阈值==<font color=red>进入熔断</font>
+  - 注意统计时间窗口是==分钟级别的==，如果<font color=red>统计时间窗口小于60s</font>，结束熔断后仍可能再次进入熔断
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597821618735-1616925298196.png" alt="1597821618735" style="zoom:80%;" />
+
+### 15.5 热点Key限流
+
+热点：热点即经常访问的数据。很多时候我们希望统计某个热点数据中访问频次最高的topK数据，并对其访问进行限制。比如：
+
+- 商品ID为参数，统计一段时间内最常购买的商品ID进行限制
+- 用户ID为参数，针对一段时间内频繁访问的用户ID进行限制
+
+热点参数限流会统计传入参数中的热点参数，并根据配置的限流阈值与模式，对包含热点参数的资源调用进行限流。热点参数限流可以看作是一种特殊的流量控制，仅对包含热点参数的资源调用生效。
+
+controller层写一个demo:
+
+```java
+	@GetMapping("/testhotkey")
+    @SentinelResource(value = "testhotkey", blockHandler = "deal_testhotkey")
+    //这个value是随意的值，并不和请求路径必须一致
+    //在填写热点限流的 资源名 这一项时，可以填 /testhotkey 或者是 @SentinelResource的value的值
+    public String testHotKey(
+            @RequestParam(value="p1", required = false) String p1,
+            @RequestParam(value = "p2", required = false) String p2
+    ){
+        return "testHotKey__success";
+    }
+
+	//类似Hystrix 的兜底方法
+    public String deal_testhotkey(String p1, String p2, BlockException e){
+        return "testhotkey__fail"; 
+    }
+```
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597822501876.png" alt="1597822501876" style="zoom:80%;" />
+
+可以配置==热点参数的例外项==
+
+<img src="images/1597822772165.png" alt="1597822772165" style="zoom:80%;" />
+
+说明：
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597822972448.png" alt="1597822972448" style="zoom:80%;" />
+
+### 15.6 系统自适应限流
+
+> 一般配置在网关或者入口应用中，但是这个东西有点危险，一旦值不合适，就相当于系统瘫痪。
+
+详细去查阅官网文档
+
+### 15.7 @SentinelResource
+
+> @SentinelResource 注解，主要是指定资源名（也可以==用请求路径作为资源名==），和==指定降级处理方法的==。
+
+```java
+package com.atguigu.springcloud.controller;
+
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.atguigu.springcloud.entities.CommonResult;
+import com.atguigu.springcloud.entities.Payment;
+import com.atguigu.springcloud.myhandler.CustomerBlockHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @Author: xiaogongbing
+ * @Description:
+ * @Date: 2021/3/29
+ */
+@RestController
+public class RateLimitController {
+
+    
+    
+    
+    // 示例一：
+    // blockHandler = "handleException"
+    // 降级的保底方法名是handleException
+    // 降级方法和业务代码耦合在一起
+    @GetMapping("/byResource")
+    @SentinelResource(value="byResource",blockHandler = "handleException")
+    public CommonResult byResource(){
+
+        return  new CommonResult(200,"按照资源名称限流测试OK",new Payment(2021L,"serial001"));
+
+    }
+
+
+    //降级方法
+    public CommonResult handleException(BlockException e){
+        return new CommonResult(444, e.getClass().getCanonicalName() + "\t 服务不可用");
+    }
+    
+    
+    
+    // 示例二：不指定blockHandler的话则使用默认的降级方法
+    @GetMapping("/rateLimit/byUrl")
+    @SentinelResource(value = "byUrl")
+    public CommonResult byUrl(){
+
+        return new CommonResult(200,"按照url限流测试OK",new Payment(2021L,"serial002"));
+    }
+    
+    
+    // 示例三：自定义降级类及其方法
+    @GetMapping("rateLimit/customerBlockHandler")
+    @SentinelResource(value = "customerBlockHandler",
+            blockHandlerClass = CustomerBlockHandler.class,blockHandler = "handlerException2")
+    public CommonResult customerBlockHandler(){
+
+        return new CommonResult(200,"按客户自定义", new Payment(2021L,"serial003"));
+    }
+
+
+}
+
+```
+
+### 15.7 fallback
+
+> fallback：管理运行异常
+>
+> blockHandler：管理配置违规
+
+以上使用sentinel有一个很明显的问题，就是sentinel，对程序内部异常（各种异常，包括超时）这种捕捉，显得很乏力。以上主要针对流量控制，系统吞吐量活着异常比例，会发生降级或熔断；但是当程序内部发生异常，直接返回给用户错误页面，根本不会触发异常比例这种降级。
+
+> 以下面的例子为例：
+>
+> 一、首先是==两个提供者模块，如下==：
+
+==pom依赖==：
+
+```xml
+<dependencies>
+        <!-- springcloud alibaba nacos 依赖 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        
+        <!-- springboot整合Web组件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency><!-- 引入自己定义的api通用包，可以使用Payment支付Entity -->
+            <groupId>com.atguigu.springcloud</groupId>
+            <artifactId>cloud-api-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+```
+
+==yml配置==：
+
+```yml
+server:
+  port: 9005  # / 9004
+spring:
+  application:
+    name: nacos-payment-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+```
+
+==主启动类只是注意别忘了@EnableDiscoveryClient注解==
+
+==业务类==
+
+```java
+@RestController
+public class PaymentController {
+
+    @Value("${server.port}")
+    private String serverPort;
+
+    //模拟sql查询
+    public static HashMap<Long, Payment> hashMap = new HashMap<>();
+    static {
+        hashMap.put(1L, new Payment(1L, "xcxcxcxcxcxcxcxcxcxcxcxcxc11111111"));
+        hashMap.put(2L, new Payment(2L, "xcxcxcxcggggggggg2222222222222222"));
+        hashMap.put(3L, new Payment(3L, "xcxcxcxccxxcxcfafdgdgdsgdsgds33333"));
+    }
+
+
+    @GetMapping("/payment/get/{id}")
+    public CommonResult paymentSql(@PathVariable("id")Long id){
+        Payment payment = hashMap.get(id);
+        CommonResult result = new CommonResult(200, "from mysql, server port : " + serverPort + " ,查询成功", payment);
+        return result;
+    }
+}
+```
+
+> 二、下面是==消费者模块，如下==：
+>
+> 主要在消费者上做fallback和blockHandler的演示
+
+==pom依赖==
+
+```xml
+<dependencies>
+        <!-- 后续做Sentinel的持久化会用到的依赖 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+        <!-- sentinel  -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+        <!-- springcloud alibaba nacos 依赖 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- springboot整合Web组件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- 日常通用jar包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency><!-- 引入自己定义的api通用包，可以使用Payment支付Entity -->
+            <groupId>com.atguigu.springcloud</groupId>
+            <artifactId>cloud-api-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+```
+
+==yml配置==
+
+```yml
+server:
+  port: 84
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8719
+  application:
+    name: nacos-order-consumer
+```
+
+==主启动类不必多说==
+
+==config类里面注入 RestTemplate：==
+
+```java
+@Configuration
+public class ApplicationContextConfig {
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+}
+```
+
+==controller 层：==
+
+```java
+@RestController
+public class OrderController {
+
+    private static final String PAYMENT_URL="http://nacos-payment-provider";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consutomer/payment/get/{id}")
+    public CommonResult getPayment(@PathVariable("id")Long id){
+        if(id >= 4){
+            throw new IllegalArgumentException("非法参数异常...");
+        }else {
+            return restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
+        }
+    }
+}
+```
+
+上面只实现了 以nacos 作为服务注册中心，消费者使用ribbon 实现负载均衡调用提供者的效果。
+
+==下面介绍fallback==
+
+#### 15.7.1 只配置fallback
+
+> ==无fallback的兜底方法==
+
+```java
+@GetMapping("/consutomer/payment/get/{id}")
+   //fallback只处理业务异常,但这里没有指出兜底方法
+    @SentinelResource(value = "fallback") 
+    public CommonResult getPayment(@PathVariable("id")Long id){
+        if(id >= 4){
+            throw new IllegalArgumentException("非法参数异常...");
+        }else {
+            return restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
+        }
+    }
+```
+
+<font color=red>会出现error页面，抛出上面定义的异常。</font>
+
+> ==有fallback的兜底方法==
+
+```java
+@GetMapping("/consutomer/payment/get/{id}")
+   //fallback只处理业务异常
+    @SentinelResource(value = "fallback", fallback = "handleFallback") 
+    public CommonResult getPayment(@PathVariable("id")Long id){
+        if(id >= 4){
+            throw new IllegalArgumentException("非法参数异常...");
+        }else {
+            return restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
+        }
+    }
+
+    //兜底方法
+    public CommonResult handleFallback(@PathVariable("id")Long id, Throwable e){
+        return new CommonResult(414, "---非法参数异常--", e);
+    }
+```
+
+<font color=red>不会出现error页面，而是自定义的CommonResult信息</font>
+
+#### 15.7.2 只配置blockHandler
+
+```java
+@GetMapping("/consutomer/payment/get/{id}")
+    @SentinelResource(value = "fallback", blockHandler = "handleblockHandler")
+    public CommonResult getPayment(@PathVariable("id")Long id){
+        if(id >= 4){
+            throw new IllegalArgumentException("非法参数异常...");
+        }else {
+            return restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
+        }
+    }
+
+
+    //====blockHandler                                       blockHandler的方法必须有这个参数
+    public CommonResult handleblockHandler(@PathVariable("id")Long id, BlockException e){
+        return new CommonResult(414, "---非法参数异常--", e);
+    }
+```
+
+> 这时候的效果就是，运行异常直接报==错误页面==。在sentinel上==添加一个降级规则==，设置==2s内触发异常2次==，触发阈值以后，返回的是我们自定义的 ==blockhanlder 方法返回的内容==。
+
+#### 15.7.3 两者都配置
+
+```java
+    @GetMapping("/consutomer/payment/get/{id}")
+    @SentinelResource(value = "fallback", blockHandler = "handleblockHandler", fallback = "handleFallback")
+    public CommonResult getPayment(@PathVariable("id")Long id){
+        if(id >= 4){
+            throw new IllegalArgumentException("非法参数异常...");
+        }else {
+            return restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
+        }
+    }
+
+
+    //====fallback
+    public CommonResult handleFallback(@PathVariable("id")Long id, Throwable e){
+        return new CommonResult(414, "---非法参数异常--form fallback的提示", e);
+    }
+
+    //====blockHandler                                       blockHandler的方法必须有这个参数
+    public CommonResult handleblockHandler(@PathVariable("id")Long id, BlockException e){
+        return new CommonResult(414, "---非法参数异常--", e);
+    }
+```
+
+> 明显两者都是有效的，可以同时配置，但是一旦达到==限流规则==，则会==进入blockHandler 进行处理==
+
+#### 15.7.4 异常忽略
+
+这是 @SentinelResource 注解的一个值：
+
+![1597909285814](SpringCloud%E6%95%99%E7%A8%8B.assets/1597909285814.png)
+
+### 15.8 全局降级
+
+> 上面是单个进行 fallback 和 blockhandler 的测试，下面是整合 openfeign 实现把降级方法解耦。和Hystrix 几乎一摸一样！
+
+还是使用上面 84 这个消费者做测试：
+
+1. 先添加open-feign依赖：
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+2. yml 追加如下配置：
+
+```yaml
+# 激活Sentinel对Feign的支持
+feign:
+  sentinel:
+    enabled: true
+```
+
+3. 主启动类添加注解 ： @EnableFeignClients  激活open-feign
+4. service : 
+
+```java
+@FeignClient(value = "nacos-payment-provider", fallback = PaymentServiceImpl.class)
+public interface PaymentService {
+
+    @GetMapping("/payment/get/{id}")
+    public CommonResult paymentSql(@PathVariable("id")Long id);
+}
+```
+
+5. service 实现类：
+
+```java
+@Component
+public class PaymentServiceImpl implements PaymentService {
+
+    @Override
+    public CommonResult paymentSql(Long id) {
+        return new CommonResult(414, "open-feign 整合 sentinel 实现的全局服务降级策略",null);
+    }
+}
+```
+
+6. controller 层代码没什么特殊的，和普通调用service 一样即可。
+7. 测试，关闭提供者的项目，会触发 service 实现类的方法。
+8. 总结: 这种全局熔断，是针对 “访问提供者” 这个过程的，只有访问提供者过程中发生异常才会触发降级，也就是这些降级，是给service接口上这些提供者的方法加的，以保证在远程调用时能顺利进行。而且这明显是 fallback ，而不是 blockHandler，注意区分。
+
+> fallback 和 blockHandler 肤浅的区别：
+>
+> F ： 不需要指定规则，程序内部异常均可触发（超时异常需要配置超时时间）
+>
+> B :  配上也没用，必须去 Sentinel 上指定规则才会被触发。 
+
+### 15.9 持久化
+
+> 目前的sentinel 当重启以后，数据都会丢失，和 nacos 类似原理。需要持久化。它可以被持久化到 nacos 的数据库中。
+
+1. pom依赖：
+
+```xml
+<dependency>
+    <groupId>com.alibaba.csp</groupId>
+    <artifactId>sentinel-datasource-nacos</artifactId>
+</dependency>
+```
+
+2. yml配置：
+
+```yaml
+spring:
+  cloud:
+    sentinel:
+      datasource:
+        ds1:  
+          nacos:
+            server-addr: localhost:8848
+            dataId: ${spring.application.name}
+            group: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+```
+
+3. 去nacos上创建一个dataid ,名字和yml配置的一致，json格式，内容如下：
+
+```json
+[
+    {
+        "resource": "/testA",
+        "limitApp": "default",
+        "grade": 1,
+        "count": 1,
+        "strategy": 0,
+        "controlBehavior": 0,
+        "clusterMode": false
+    }
+]
+```
+
+<img src="images/1597913169207.png" alt="1597913169207" style="zoom:80%;" />
+
+4. 启动应用，发现存在 关于 /testA 请求路径的流控规则。
+5. 总结: 就是在 sentinel 启动的时候，去 nacos 上读取相关规则配置信息，实际上它规则的持久化，就是第三步，粘贴到nacos上保存下来，就算以后在 sentinel 上面修改了，重启应用以后也是无效的。
+
+## 十六、Spring Cloud Alibaba之分布式事务
+
+> Seate 处理分布式事务。
+>
+> 微服务模块，连接多个数据库，多个数据源，而数据库之间的数据一致性需要被保证。
+>
+> 官网：  http://seata.io/zh-cn/ 
+
+### 16.1 简介
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210330222749100.png" alt="image-20210330222749100" style="zoom:80%;" />
+
+Seata术语： 一 + 三
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597982738615.png" alt="1597982738615" style="zoom:80%;" />
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597982788659.png" alt="1597982788659" style="zoom:80%;" />
+
+![1597982858545](SpringCloud%E6%95%99%E7%A8%8B.assets/1597982858545.png)
+
+> 下载地址 ： https://github.com/seata/seata/releases/download/v1.0.0/seata-server-1.0.0.zip
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597984908755.png" alt="1597984908755" style="zoom:80%;" />
+
+### 16.2 初始化配置
+
+> 一、修改conf/file.conf文件
+>
+> 主要修改自定义==事务组名称== +==事务日志存储模式为db== + ==数据库连接信息==
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210331205027925.png" alt="image-20210331205027925" style="zoom:80%;" />
+
+> 二、创建==名和file.conf指定一致的数据库==
+
+> 三、在新建的数据库里面创建数据表，==db_store.sql==文件在 conf 目录下（1.0.0有坑，没有sql文件，下载0.9.0的，使用它的sql文件即可）
+
+> 四、修改==conf/registry.conf文件==的内容
+
+<img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210331205741264.png" alt="image-20210331205741264" style="zoom:80%;" />
+
+> 五、先启动nacos Server服务，再启动seata Server
+
+### 16.3 案例介绍
+
+> 创建三个微服务，一个==订单服务==，一个==库存服务==，一个==账户服务==
+>
+> 订单服务中创建一个订单，==远程调用库存服务==来扣减下单商品的库存
+>
+> 再通过==远程调用账户服务==来扣减用户账户里面的余额
+>
+> 最后在订单服务中==修改订单状态为已完成==
+>
+> 该操作跨越三个数据库，有两次远程调用，很明显会有分布式事务问题
+
+#### 16.3.1 数据库准备
+
+创建三个数据库： <img src="/images/1597987722338.png" alt="1597987722338" style="zoom:80%;" />
+
+每个数据库创建数据表：
+
+order 库： 
+
+![1597988061545](G:/%25E7%2599%25BE%25E5%25BA%25A6%25E4%25BA%2591%25E5%25AD%2598%25E5%2582%25A8/springCloud/images/1597988061545.png)
+
+account 库： 
+
+![1597988768251](SpringCloud%E6%95%99%E7%A8%8B.assets/1597988768251.png)
+
+storage 库：
+
+![1597988262441](SpringCloud%E6%95%99%E7%A8%8B.assets/1597988262441.png)
+
+三个数据库都创建一个回滚日志表，seata/conf/ 有相应的sql文件（1.0.0没有，依然使用0.9.0中的）。
+
+最终效果：
+
+![1597989003349](SpringCloud%E6%95%99%E7%A8%8B.assets/1597989003349.png)
+
+#### 16.3.2 开发过程
+
+> 实现==下订单-> 减库存 -> 扣余额 -> 改（订单）状态==
+>
+> 需要注意的是，下面做了 seata 与 mybatis 的整合，所以注意一下，和以往的mybatis的使用不太一样。
+
+> 一、新建模块 cloudalibaba-seata-order2001 
+
+==1. pom依赖：==
+
+```xml
+ <dependencies>
+        <!-- seata -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>seata-all</artifactId>
+                    <groupId>io.seata</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-all</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+        <!-- springcloud alibaba nacos 依赖,Nacos Server 服务注册中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- open feign 服务调用 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- springboot整合Web组件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- 持久层支持 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version>
+        </dependency>
+        <!--mysql-connector-java-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!--jdbc-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 日常通用jar包 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atguigu.springcloud</groupId>
+            <artifactId>cloud-api-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+```
+
+==2. yml配置==
+
+```yml
+server:
+  port: 2001
+spring:
+  application:
+    name: seata-order-service
+  cloud:
+    alibaba:
+      seata:
+        # 自定义事务组，需要和当时在 seata/conf/file.conf 中的一致
+        tx-service-group: dexlace-group
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seata_order
+    username: root
+    password: 123456
+
+
+# 注意，这是自定义的，原来的是mapper_locations
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+
+logging:
+  level:
+    io:
+      seata: info
+```
+
+3. 将 seata/conf/ 下的 ==file.conf 和 registry.cong 两个文件拷贝到 resource 目录下。==
+
+4. ==创建 domain 实体类==： Order 和 CommonResult<T> 两个实体类。
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CommonResult<T> {
+
+    private Integer code;
+    private String message;
+    private T data;
+
+    public CommonResult(Integer code, String message){
+        this(code,message,null);
+    }
+}
+```
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Order {
+
+    private Long id;
+    private Long userId;
+    private Long productId;
+    private Integer count;
+    private BigDecimal money;
+    private Integer status;  //订单状态：0创建中，1创建完成
+}
+
+```
+
+5. ==dao==
+
+```java
+/**
+ * @Author: xiaogongbing
+ * @Description:
+ * @Date: 2021/3/31
+ */
+@Mapper
+public interface OrderDao {
+
+    //创建订单
+    public void create(Order order);
+
+    //修改订单状态
+    public void update(@Param("userId") Long userId, @Param("status") Integer status);
+
+}
+```
+
+6. ==mapper文件==
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.atguigu.springcloud.alibaba.dao.OrderDao">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.springcloud.alibaba.domain.Order">
+        <id column="id" property="id" jdbcType="BIGINT"></id>
+        <result column="user_id" property="userId" jdbcType="BIGINT"></result>
+        <result column="product_id" property="productId" jdbcType="BIGINT"></result>
+        <result column="count" property="count" jdbcType="INTEGER"></result>
+        <result column="money" property="money" jdbcType="DECIMAL"></result>
+        <result column="status" property="status" jdbcType="INTEGER"></result>
+    </resultMap>
+
+    <insert id="create">
+        insert into t_order(id, user_id, product_id, count, money, status)
+        values (null, #{userId},#{productId},#{count},#{money},0)
+    </insert>
+
+    <update id="update">
+        update t_order set status = 1 where user_id=#{userId} and status=#{status}
+    </update>
+
+</mapper>
+
+
+```
+
+7. ==service层==
+
+> <img src="SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210331214523027.png" alt="image-20210331214523027" style="zoom:67%;" />
+
+serviceImpl : 
+
+```java
+@Service
+@Slf4j
+public class OrderServiceImpl  implements OrderService {
+
+    @Resource
+    private OrderDao orderDao;
+
+    @Resource
+    private StorageService storageService;
+
+    @Resource
+    private AccountService accountService;
+
+    @Override
+    public void create(Order order) {
+        log.info("--------》 开始创建订单");
+        orderDao.create(order);
+        log.info("--------》 订单微服务开始调用库存，做扣减---Count-");
+        storageService.decrease(order.getProductId(), order.getCount());
+        log.info("--------》 订单微服务开始调用库存，库存扣减完成！！");
+        log.info("--------》 订单微服务开始调用账户，账户扣减---money-");
+        accountService.decrease(order.getUserId(),order.getMoney());
+        log.info("--------》 订单微服务开始调用账户，账户扣减完成!!");
+        //修改订单状态，从0到1
+        log.info("--------》 订单微服务修改订单状态，start");
+        orderDao.update(order.getUserId(),0);
+        log.info("--------》 订单微服务修改订单状态，end");
+
+        log.info("--订单结束--");
+    }
+
+    @Override
+    public void update(Long userId, Integer status) {
+
+    }
+}
+```
+
+```java
+@FeignClient(value = "seata-account-service")
+public interface AccountService {
+
+    @PostMapping("/account/decrease")
+    CommonResult decrease(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money);
+}
+
+```
+
+```java
+@FeignClient(value="seata-storage-service")
+public interface StorageService {
+
+    @PostMapping("/storage/decrease")
+    CommonResult decrease(@RequestParam("productId") Long productId, @RequestParam("count") Integer count);
+}
+
+```
+
+8. Controller层
+
+```java
+@RestController
+public class OrderController {
+
+    @Resource
+    private OrderService orderService;
+
+    @GetMapping("/order/create")
+    public CommonResult create(Order order){
+        orderService.create(order);
+        return new CommonResult(200, "订单创建成！");
+    }
+}
+```
+
+9. config（==seata整合了一下mybatis==）
+
+   ```java
+   package com.atguigu.springcloud.alibaba.config;
+   
+   import com.alibaba.druid.pool.DruidDataSource;
+   import io.seata.rm.datasource.DataSourceProxy;
+   import org.apache.ibatis.session.SqlSessionFactory;
+   import org.mybatis.spring.SqlSessionFactoryBean;
+   import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
+   import org.springframework.beans.factory.annotation.Value;
+   import org.springframework.boot.context.properties.ConfigurationProperties;
+   import org.springframework.context.annotation.Bean;
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+   
+   import javax.sql.DataSource;
+   
+   @Configuration
+   public class DataSourceProxyConfig {
+   
+       @Value("${mybatis.mapperLocations}")
+       private String mapperLocations;
+   
+       @Bean
+       @ConfigurationProperties(prefix = "spring.datasource")
+       public DataSource druidDataSource(){
+           return new DruidDataSource();
+       }
+   
+       @Bean
+       public DataSourceProxy dataSourceProxy(DataSource dataSource){
+           return new DataSourceProxy(dataSource);
+       }
+   
+       @Bean
+       public SqlSessionFactory sqlSessionFactoryBean(DataSourceProxy dataSourceProxy) throws Exception {
+           SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+           sqlSessionFactoryBean.setDataSource(dataSourceProxy);
+           sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));
+           sqlSessionFactoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
+           return sqlSessionFactoryBean.getObject();
+       }
+   }
+   
+   ```
+
+   ```java
+   package com.atguigu.springcloud.alibaba.config;
+   
+   import org.mybatis.spring.annotation.MapperScan;
+   import org.springframework.context.annotation.Configuration;
+   
+   @Configuration
+   @MapperScan({"com.atguigu.springcloud.alibaba.dao"})
+   public class MybatisConfig {
+   }
+   
+   ```
+
+10. 主启动类：
+
+```java
+package com.atguigu.springcloud.alibaba;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+/**
+ * @Author: xiaogongbing
+ * @Description:
+ * @Date: 2021/3/31
+ */
+@EnableDiscoveryClient
+@EnableFeignClients
+@SpringBootApplication( exclude = DataSourceAutoConfiguration.class)
+public class SeataOrderMainApp2001 {
+    public static void main(String[] args) {
+        SpringApplication.run(SeataOrderMainApp2001.class,args);
+    }
+}
+
+```
+
+先启动 nacos  --> 再启动 seata --> 再启动此order服务，测试，可以启动。
+
+> 仿照上面 创建  ==cloudalibaba-seata-storage2002== 和  ==cloudalibaba-seata-account2003== 两个模块，唯一大的区别就是这两个==不需要导入 open-feign 远程调用其它模块==。
+
+#### 16.3.3 seata使用
+
+```java
+ @Override
+//只需要在业务类的方法上加上该注解，name值自定义唯一即可。
+    @GlobalTransactional(name="create-order",rollbackFor = Exception.class)
+    public void create(Order order) {
+        log.info("--------》 开始创建订单");
+        orderDao.create(order);
+        log.info("--------》 订单微服务开始调用库存，做扣减---Count-");
+        storageService.decrease(order.getProductId(), order.getCount());
+        log.info("--------》 订单微服务开始调用库存，库存扣减完成！！");
+
+        log.info("--------》 订单微服务开始调用账户，账户扣减---money-");
+        accountService.decrease(order.getUserId(),order.getMoney());
+        log.info("--------》 订单微服务开始调用账户，账户扣减完成!!");
+
+        //修改订单状态
+        log.info("--------》 订单微服务修改订单状态，start");
+        orderDao.update(order.getUserId(),0);
+        log.info("--------》 订单微服务修改订单状态，end");
+
+        log.info("--订单结束--");
+    }
+```
+
+如此可以保证整个==调用链路过程中的分布式事务的一致性==
+
+### 16.4 seata原理介绍
+

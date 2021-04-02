@@ -1,10 +1,89 @@
 # Docker
 
-弱小和无知不是生存的障碍，傲慢才是。
+==弱小和无知不是生存的障碍，傲慢才是。==
 
 ## 一、简介
 
+==软件带环境安装==
 
+Docker镜像的设计，使得Docker得以打破过去「程序即应用」的观念。透过镜像(images)将作业系统核心除外，运作应用程式所需要的系统环境，由下而上打包，达到应用程式跨平台间的无缝接轨运作。
+
+Docker是==基于Go语言实现的云开源项目==。
+
+Docker的主要目标是==“Build，Ship and Run Any App,Anywhere”==，也就是通过对应用组件的封装、分发、部署、
+
+运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到==一次封装，到处运行==
+
+==Linux 容器技术==的出现就解决了这样一个问题，而 Docker 就是在它的基础上发展过来的。将应用运行在 Docker 
+
+容器上面，而 Docker 容器在任何操作系统上都是一致的，这就实现了跨平台、跨服务器。只需要一次配置好环
+
+境，换到别的机子上就可以一键部署好，大大简化了操作
+
+> <font color=red>与虚拟机的区别</font>
+
+虚拟机（virtual machine）就是==带环境安装的一种解决方案。==
+
+它可以在一种操作系统里面运行另一种操作系统，比如在Windows 系统里面运行Linux 系统。应用程序对此毫无感知，因为虚拟机看上去跟真实系统一模一样，而对于底层系统来说，虚拟机就是一个普通文件，不需要了就删掉，对其他部分毫无影响。这类虚拟机完美的运行了另一套系统，能够使应用程序，操作系统和硬件三者之间的逻辑不变。  
+
+> > <font color=red>虚拟机的缺点：</font>
+
+- ==资源占用多==              
+
+- ==冗余步骤多==           
+
+- ==启动慢==
+
+由于前面虚拟机存在这些缺点，Linux 发展出了另一种虚拟化技术：==Linux 容器（Linux Containers，缩写为 LXC）。==
+
+Linux 容器不是模拟一个完整的操作系统，而是对进程进行隔离。有了容器，就可以将软件运行所需的所有资源打包到一个隔离的容器
+
+中。容器与虚拟机不同，不需要捆绑一整套操作系统，只需要软件工作所需的库资源和设置。系统因此而变得高效轻量并保证部署在任何
+
+环境中的软件都能始终如一地运行。
+
+> <font color=red>比较了 Docker 和传统虚拟化方式的不同之处：</font>
+
+- 传统虚拟机技术是==虚拟出一套硬件后，在其上运行一个完整操作系统==，在该系统上再运行所需应用进程；
+- 而==容器内的应用进程直接运行于宿主的内核==，==容器内没有自己的内核==，而且==也没有进行硬件虚拟==。因此容器要比传统虚拟机更为==轻便。==
+
+* 每个容器之间==互相隔离==，每个容器有自己的文件系统 ，容器之间进程不会相互影响，能区分计算资源。
+
+> <font color=red>能干嘛</font>
+
+- 更快速的应用交付和部署
+- 更便捷的升级和扩容
+- 更简单的系统运维
+- 更高效的计算资源利用
+
+> <font color=red>Docker的基本概念</font>
+
+- ==镜像（image）==:
+
+​       就是一个==只读的模板==。镜像可以用来创建 Docker 容器，==一个镜像可以创建很多容器。==
+
+- ==容器（container）==
+
+  Docker 利用容器（Container）独立运行的一个或一组应用。容器是==用镜像创建的运行实例==。
+
+  它可以被==启动、开始、停止、删除==。每个容器都是相互隔离的、保证安全的平台。
+
+  可以把容器看做是一个简易版的 Linux 环境（包括root用户权限、进程空间、用户空间和网络空间等）和运行在其中的应用程序。
+
+
+  容器的定义和镜像几乎一模一样，也是一堆层的统一视角，唯一区别在于容器的最上面那一层是可读可写的。
+
+- ==仓库（repository）==
+
+​      仓库(Repository)和仓库注册服务器（Registry）是有区别的。仓库注册服务器上往往存放着多个仓库，每个仓库中又包含了多个镜
+
+​      像，每个镜像有不同的标签（tag）。
+
+​      仓库分为==公开仓库（Public）==和==私有仓库（Private）==两种形式。
+
+​      最大的公开仓库是 Docker Hub(https://hub.docker.com/)，存放了数量庞大的镜像供用户下载。
+
+​      国内的公开仓库包括==阿里云 、网易云==等
 
 ## 二、Docker安装（Centos7）
 
@@ -23,6 +102,10 @@ yum install -y yum-utils device-mapper-persistent-data lvm2
   yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   # 或者阿里云仓库
   yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+  # 清华大学
+    yum-config-manager \
+    --add-repo \
+    https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/centos/docker-ce.repo
 # 5.更新yum软件包索引
   yum makecache fast
 # 6.安装docker社区版
@@ -41,7 +124,8 @@ yum install -y yum-utils device-mapper-persistent-data lvm2
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-  "registry-mirrors": ["https://k5c60z38.mirror.aliyuncs.com"]
+## 多个镜像加速
+  "registry-mirrors":     ["https://k5c60z38.mirror.aliyuncs.com","https://docker.mirrors.ustc.edu.cn/"]
 }
 EOF
 sudo systemctl daemon-reload
@@ -78,15 +162,13 @@ docker images # 列出本机的镜像
 
 各个选项说明:REPOSITORY：表示镜像的仓库源
 
-TAG：镜像的标签
+==TAG==：镜像的标签，我们使用 ==REPOSITORY:TAG 来定义不同的镜像。==
 
-IMAGE ID：镜像ID
+==IMAGE ID==：==镜像ID==
 
 CREATED：镜像创建时间
 
 SIZE：镜像大小
-
-TAG: 代表这个仓库源的不同个版本，我们使用 REPOSITORY:TAG 来定义不同的镜像。
 
 如果你不指定一个镜像的版本标签，例如你只使用 ubuntu，docker 将默认使用 ubuntu:latest 镜像
 
@@ -157,6 +239,9 @@ docker run -it centos /bin/bash 
 ## 注意-d
 -d: 后台运行容器，并返回容器ID，也即启动守护式容器；
 -P: 随机端口映射；
+####################
+######注意端口映射很常用#########
+####################
 -p: 指定端口映射，有以下四种格式
       ip:hostPort:containerPort
       ip::containerPort
@@ -214,7 +299,7 @@ docker run -d 容器名
 
 使用镜像centos:latest以后台模式启动一个容器docker run -d centos问题：然后<font color=red>docker ps -a</font> 进行查看, 会发现<font color=red>容器已经退出</font>
 
-说明的一点: <font color=red>Docker容器后台运行,就必须有一个前台进程</font>.容器运行的命令如果<font color=red>不是那些一直挂起的命令</font>（比如运行top，tail），就是会
+说明的一点: ==<font color=red>Docker容器后台运行,就必须有一个前台进程</font>==.容器运行的命令如果<font color=red>不是那些一直挂起的命令</font>（比如运行top，tail），就是会
 
 自动退出的。这个是docker的机制问题,比如你的web容器,我们以nginx为例，正常情况下,我们配置启动服务只需要启动响应的service即
 
@@ -259,7 +344,7 @@ docker attach 容器ID # attach 直接进入容器启动命令的终端，不会
 docker cp  容器ID:容器内路径 目的主机路径
 ```
 
-## 四、 Docker镜像
+## 四、 Docker镜像理解
 
 **<font color=red>是一个UnionFS（联合文件系统）</font>**
 
@@ -306,17 +391,265 @@ Docker镜像的最底层是bootfs。这一层与我们典型的Linux/Unix系统�
 
 ## 五、 Docker容器数据卷
 
+### 5.1 数据卷
 
+> ==作用==
+
+- <font color=red>docker容器持久化，也就是在宿主机内操作指定目录，却能在容器内得到相应改变</font>
+
+-  <font color=red>容器间继承和数据共享</font>
+
+> 一、直接命令添加
+
+```bash
+ docker run -it  -v   /宿主机绝对路径目录:/容器内目录      镜像名
+```
+
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210401165639614.png" alt="image-20210401165639614" style="zoom:80%;" />
+
+==查看是否挂载成功==
+
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210401170006207.png" alt="image-20210401170006207" style="zoom:80%;" />
+
+==如此，宿主主机和容器内目录的对应目录的下的数据都能感知并共享==
+
+==此外，容器停止退出后，宿主主机修改数据，容器启动也会自动同步==
+
+```bash
+ # 带权限 这里是read only,表示容器内的目录下的数据不能修改
+ docker run -it -v /宿主机绝对路径目录:/容器内目录:ro 镜像名
+```
+
+> 二、DockerFile:类似于描述镜像的源码，可以通过它直接生成新镜像，==在其中可以使用VOLUME指令添加一个或多个数据卷==
+
+```bash
+ 
+VOLUME["/dataVolumeContainer","/dataVolumeContainer2","/dataVolumeContainer3"]
+ 
+# 说明：
+ 
+# 出于可移植和分享的考虑，用-v 主机目录:容器目录这种方法不能够直接在Dockerfile中实现。
+# 由于宿主机目录是依赖于特定宿主机的，并不能够保证在所有的宿主机上都存在这样的特定目录
+```
+
+步骤：
+
+1. 准备一个==空目录==，比如/mydocker,并==新建一个dockerfile文件==，比如名字叫做mycentos-dockerfile
+
+2. 写个简单的dockefile文件
+
+   <img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210401174827323.png" alt="image-20210401174827323" style="zoom:80%;" />
+
+3. 执行以下命令
+
+```bash
+docker build -f /mydocker/mycentos-dockerfile -t doglast/centos .
+# /mydocker/mycentos-dockerfile 代表构建该镜像的dockerfile文件
+# doglast/centos 代表新取得镜像名
+# .本次执行的上下文路径
+# 上下文路径，是指 docker 在构建镜像，有时候想要使用到本机的文件（比如复制），docker build 命令得知这个路径后，会将路径下的所有内容打包。
+# 上下文路径下不要放无用的文件，因为会一起打包发送给 docker 引擎，如果文件过多会造成过程缓慢。
+```
+
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210401180754172.png" alt="image-20210401180754172" style="zoom:67%;" />
+
+注意在==镜像中的容器卷目录==和==主机中对应的目录==，可以由==docker inspect 容器id==得到对应关系，是docker在宿主机自动生成的
+
+Docker挂载主机目录Docker访问出现cannot open directory .: Permission denied
+
+==解决办法：在挂载目录后多加一个--privileged=true参数即可==
+
+### 5.2 数据卷容器
+
+> ==容器间传递共享==
+>
+> 容器之间配置信息的传递，数据卷的生命周期一直==持续到没有容器使用它为止==
+
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210401192853550.png" alt="image-20210401192853550" style="zoom:67%;" />
 
 ## 六、 DockerFile解析
 
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210401220912759.png" alt="image-20210401220912759" style="zoom:80%;" />![image-20210401220944692](Docker%E7%AC%94%E8%AE%B0.assets/image-20210401220944692.png)
 
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210401221104759.png" alt="image-20210401221104759" style="zoom:80%;" />
+
+### 6.1 DockerFile的保留字指令
+
+```bash
+FROM #基础镜像
+MAINTAINER #镜像维护者的姓名和邮箱地址
+RUN #容器构建时需要运行的命令
+EXPOSE #当前容器对外暴露出的端口
+
+WORKDIR #指定在创建容器后，终端默认登陆进来的工作目录 WORKDIR $MY_PATH
+ENV #设置环境变量，这个环境变量会在后续的任何RUN指令中使用，这就如同在命令前面指定了环境变量前缀一样；示例：ENV MY_PATH /usr/mytest
+ADD #将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和解压tar压缩包
+COPY # 类似于ADD,拷贝文件和目录到镜像中，将从构建上下文目录中<源路径>的文件/目录复制到新的一层的镜像内的<目标路径>位置。
+VOLUME #容器数据卷，用于数据保存和持久化工作
+CMD #指定一个容器启动时要运行的命令；有两种格式，一种是shell格式：CMD <命令>；一种是exec格式：CMD ["可执行文件"，"参数1"，"参数2"...];在Dockerfile中可以有多个CMD指令，但只有最后一个生效，CMD会被docker run之后的参数替换，也就是docker run命令后的参数会替代最后一个CMD命令的参数
+ENTRYPOINT #指定一个容器启动时要运行的命令，ENTRYPOINT的目的和CMD一样，都是在指定容器启动程序及参数，这里不会，docker run命令后的参数只会追加到ENTRYPOINT命令的参数中
+ONBUILD #当构建一个被继承的Dockerfile时运行命令，父镜像会在被子镜像继承后父镜像的ONBUILD会被触发
+        # 也就是ONBUILD在当该镜像为父镜像时，ONBUILD后面的命令会被运行
+
+
+```
+
+> ==自定义centos dockfile文件==
+>
+> 构建命令：
+>
+> ==docker build -f== /mydocker/dockerfile2 ==-t== mycentos:1.11  ==.==
+
+```dockerfile
+FROM centos
+MAINTAINER 1799076485@qq.com
+
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+
+RUN yum -y install vim
+RUN yum -y install net-tools
+
+EXPOSE 80
+
+CMD echo $MYPATH
+CMD echo "success---------ok"
+CMD /bin/bash
+
+
+```
+
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210402104140954.png" alt="image-20210402104140954" style="zoom:67%;" />
+
+> ==<font color=red>理解CMD和ENTRYPOINT</font>==
+>
+> ==CMD== #指定一个容器启动时要运行的命令；
+>
+> 有两种格式，一种是==shell格式：==CMD <命令>；
+>
+> 一种是==exec格式：==CMD ["可执行文件"，"参数1"，"参数2"...];
+>
+> 在Dockerfile中可以有多个CMD指令，但只有最后一个生效，CMD会被docker run之后的参数替换，也就是<font color=red>docker run命令后的参数会替代最后一个CMD命令的参数</font>
+>
+> 比如：运行==docker run -it -p 7777:8080 tomcat ls -l==
+>
+> <font color=red>ls -l替代了运行tomcat的指令，所以tomcat没有启动</font>
+>
+> ==ENTRYPOINT== #指定一个容器启动时要运行的命令，ENTRYPOINT的目的和CMD一样，都是在指定容器启动程序及参数，<font color=red>docker run命令后的参数会追加到ENTRYPOINT命令的参数中</font>
+
+### 6.2 案例-以tomcat9为例
+
+> 步骤一：==创建一个目录==，比如名为tomcat-diy-docker文件夹
+>
+> 步骤二：将==tomcat9的某个版本的压缩包==和==jdk8的压缩包==放进去，可以==touch一个任意文件==（只为说明会全部打包进入新镜像）
+>
+> 步骤三：==写dockerfile文件==，比如名字叫tomcatDockerfile
+
+```dockerfile
+FROM centos
+MAINTAINER 1799076485@qq.com
+
+# 把宿主机当前上下文的a.txt拷贝到/usr/local/路径下
+COPY a.txt /usr/local/cincontainer.txt
+
+# 把JAVA与tomcat添加到容器中
+#
+# jdk8u281.tar.gz  tomcat9044.tar.gz
+ADD jdk8u281.tar.gz   /usr/local/
+ADD tomcat9044.tar.gz  /usr/local/
+
+# 安装vim编辑器
+
+RUN yum -y install vim
+
+# 设置工作访问时候的WORKDIR路径，登录落脚点
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+
+#配置java与tomcat环境变量
+ENV  JAVA_HOME /usr/local/jdk1.8.0_281
+ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.44
+ENV CATALINA_BASE /usr/local/apache-tomcat-9.0.44
+ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin
+
+# 容器运行时监听的端口
+EXPOSE 8080
+
+# 启动时运行tomcat
+# ENTRYPOINT ["/usr/local/apache-tomcat-9.0.44/bin/startup.sh"]
+# CMD ["/usr/local/apache-tomcat-9.0.44/bin/catalina.sh","run"]
+
+CMD /usr/local/apache-tomcat-9.0.44/bin/startup.sh && tail -F /usr/local/apache-tomcat-9.0.44/logs/catalina.out
+
+```
+
+> 步骤四：按照Dockfile进行==构建镜像==
+
+```bash
+# 注意，一般在以上目录下执行，因为执行该命令会打包很多东西   这里的.代表的是当前目录的上下文
+# -f tomcatDockerfile 指定的是当前目录下的tomcatDockerfile的镜像文件
+# 如果当前目录下的镜像文件是Dockerfile，则-f Dockerfile都不用写
+docker build -f tomcatDockerfile -t mytomcat9 .
+```
+
+> 步骤五：==运行docker上的tomcat9==
+
+```bash
+docker run -d -p 9080:8080 --name myt9  \   
+  -v /mydockerApplication/web/test:/usr/local/apache-tomcat-9.0.44/webapps/test \
+  -v /mydockerApplication/web/logs:/usr/local/apache-tomcat-9.0.44/logs \
+  --privillage=true \
+  mytomcat9
+  
+  # 以上命令做了端口映射，取了新名字myt9
+  # 挂载了容器卷两个，其中webapps目录下的项目被映射到主机
+```
+
+<img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210402140334153.png" alt="image-20210402140334153" style="zoom:67%;" />
+
+果然访问宿主主机的9080端口即可访问
+
+> 其实这不仅仅是tomcat9的镜像，只是里面最后的==CMD执行的是tomcat9的运行命令==，如果你==后台运行了上面的镜像==，还是可以
+>
+> ==docker exec -it 容器ID [命令]== 以执行其他操作
 
 ## 七、 Docker常用安装
 
+> 一、docker安装mysql
+>
+> ```bash
+> docker pull mysql:5.6
+> ```
+>
+> 二、运行之
+>
+> ```bash
+> docker run -itd --name mysql -p 3306:3306 
+> -e MYSQL_ROOT_PASSWORD=123456 mysql:5.6
+> ```
+>
+> <img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210402145110485.png" alt="image-20210402145110485" style="zoom:80%;" />
+>
+> 三、查验之
+>
+> ![image-20210402145602297](Docker%E7%AC%94%E8%AE%B0.assets/image-20210402145602297.png)
+>
+> 四、进入正在运行的mysql中
+>
+> ```bash
+> docker exec  -it  mysql容器id /bin/bash
+> ```
+>
+> <img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210402150606652.png" alt="image-20210402150606652" style="zoom:80%;" />
+>
+> 五、运行mysql
+>
+> <img src="Docker%E7%AC%94%E8%AE%B0.assets/image-20210402150743102.png" alt="image-20210402150743102" style="zoom:67%;" />
 
+> 其他的类似
 
 ## 八、 本地镜像发布到阿里云
 
-
+https://blog.csdn.net/pjsdsg/article/details/90600471
 
