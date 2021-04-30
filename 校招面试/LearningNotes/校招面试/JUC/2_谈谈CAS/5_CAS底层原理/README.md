@@ -31,7 +31,7 @@ atomicInteger.compareAndSet(5, 1024)
 
 完整代码如下：
 
-```
+```java
 /**
  * CASDemo
  *

@@ -87,7 +87,7 @@ JMM的三大特性，volatile只保证了两个，即可见性和有序性，不
 
 但我们对于成员变量没有添加任何修饰时，是无法感知其它线程修改后的值
 
-```
+```java
 package com.moxi.interview.study.thread;
 
 /**

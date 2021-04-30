@@ -15,11 +15,11 @@
 
 ## 剖析
 
-在以前，如果前几年的时候，一般来说，redis如果要搞几个节点，每个节点存储一部分的数据，得借助一些中间件来实现，比如说有codis，或者twemproxy，都有。有一些redis中间件，你读写redis中间件，redis中间件负责将你的数据分布式存储在多台机器上的redis实例中。
+在以前，如果前几年的时候，一般来说，redis如果要搞几个节点，==每个节点存储一部分的数据==，得借助一些中间件来实现，比如说有codis，或者twemproxy，都有。有一些redis中间件，你读写redis中间件，redis中间件负责将你的数据分布式存储在多台机器上的redis实例中。
 
 这两年，redis不断在发展，redis也不断的有新的版本，redis cluster，redis集群模式，你可以做到在多台机器上，部署多个redis实例，每个实例存储一部分的数据，同时每个redis实例可以挂redis从实例，自动确保说，如果redis主实例挂了，会自动切换到redis从实例顶上来。
 
-现在redis的新版本，大家都是用redis cluster的，也就是redis原生支持的redis集群模式，那么面试官肯定会就redis cluster对你来个几连炮。要是你没用过redis cluster，正常，以前很多人用codis之类的客户端来支持集群，但是起码你得研究一下redis cluster吧。
+==现在redis的新版本，大家都是用redis cluster的，也就是redis原生支持的redis集群模式==，那么面试官肯定会就redis cluster对你来个几连炮。要是你没用过redis cluster，正常，以前很多人用codis之类的客户端来支持集群，但是起码你得研究一下redis cluster吧。
 
 
 
@@ -27,13 +27,13 @@
 
 ### 单机瓶颈
 
-Redis在单机架构下的瓶颈：master节点的数据和slave节点的数据量一样，也就是master容纳多少，slave也只能容纳多少，如果需要放1T数据，在缓存中，那么就遇到的性能瓶颈了。
+Redis在单机架构下的瓶颈：==master节点的数据和slave节点的数据量一样，也就是master容纳多少，slave也只能容纳多少，如果需要放1T数据，在缓存中，那么就遇到的性能瓶颈了==。
 
 ![redis单master架构的容量的瓶颈问题](images/redis单master架构的容量的瓶颈问题.png)
 
 ### 集群模式
 
-支撑N个redis master node，每个master node都可以挂载多个slave node，读写分离的架构，对于每个master来说，写就写到master，然后读就从mater对应的slave去读，高可用，因为每个master都有salve节点，那么如果mater挂掉，redis cluster这套机制，就会自动将某个slave切换成master，redis cluster（多master + 读写分离 + 高可用），我们只要基于redis cluster去搭建redis集群即可，不需要手工去搭建replication复制+主从架构+读写分离+哨兵集群+高可用
+==支撑N个redis master node==，==每个master node都可以挂载多个slave node==，读写分离的架构，==对于每个master来说，写就写到master，然后读就从mater对应的slave去读==，高可用，因为每个master都有salve节点，那么如果mater挂掉，redis cluster这套机制，就会自动将某个slave切换成master，redis cluster（多master + 读写分离 + 高可用），我们只要基于redis cluster去搭建redis集群即可，不需要手工去搭建replication复制+主从架构+读写分离+哨兵集群+高可用
 
 ![redis如何通过master横向扩容支撑1T+数据量](images/redis如何通过master横向扩容支撑1T+数据量.png)
 

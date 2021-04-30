@@ -4,7 +4,7 @@
 
 首先回顾一下，单线程下的单例模式代码
 
-```
+```java
 /**
  * SingletonDemo（单例模式）
  *
@@ -44,7 +44,7 @@ public class SingletonDemo {
 
 但是在多线程的环境下，我们的单例模式是否还是同一个对象了
 
-```
+```java
 /**
  * SingletonDemo（单例模式）
  *
@@ -84,7 +84,7 @@ public class SingletonDemo {
 
 引入synchronized关键字
 
-```
+```java
     public synchronized static SingletonDemo getInstance() {
         if(instance == null) {
             instance = new SingletonDemo();
@@ -107,7 +107,7 @@ public class SingletonDemo {
 
 就是在进来和出去的时候，进行检测
 
-```
+```java
     public static SingletonDemo getInstance() {
         if(instance == null) {
             // 同步代码段的时候，进行检测
@@ -157,7 +157,7 @@ private static volatile SingletonDemo instance = null;
 
 ### 最终代码
 
-```
+```java
 /**
  * SingletonDemo（单例模式）
  *

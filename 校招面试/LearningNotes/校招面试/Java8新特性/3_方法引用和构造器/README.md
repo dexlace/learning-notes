@@ -4,7 +4,7 @@
 
 ### 概念
 
-若Lambda体中的内容有方法已经实现了，我们可以使用“方法引用”，可以理解为方法引用是Lambda表达式的另外一种表现形式
+若Lambda体中的内容==有方法已经实现了==，我们可以使用==“方法引用”==，可以理解为方法引用是Lambda表达式的另外一种表现形式
 
 ### 格式
 
@@ -19,7 +19,7 @@
 
 ### 对象::实例方法名
 
-```
+```java
      /**
      * 格式： 对象::实例方法名
      */
@@ -48,7 +48,7 @@
 
 ### 类::静态方法名
 
-```
+```java
 /**
  * 类::静态方法名
  */
@@ -62,7 +62,7 @@ public static void test3() {
 
 ### 类::实例方法名
 
-```
+```java
     /**
      * 类::实例方法名
      */
@@ -92,7 +92,7 @@ public static void test3() {
 
 ### 代码
 
-```
+```java
     /**
      * 构造器引用
      */
@@ -118,7 +118,7 @@ public static void test3() {
 
 - Type::new
 
-```
+```java
     public static void test() {
         Function<Integer, String[]> function = (x) -> new String[x];
         function.apply(20);

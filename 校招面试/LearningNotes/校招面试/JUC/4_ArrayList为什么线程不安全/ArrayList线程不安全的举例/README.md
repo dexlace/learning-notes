@@ -101,7 +101,7 @@ CopyOnWriteArrayList：写时复制，主要是一种读写分离的思想
 
 查看底层add方法源码
 
-```
+```java
     public boolean add(E e) {
         final ReentrantLock lock = this.lock;
         lock.lock();
