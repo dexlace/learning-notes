@@ -1,0 +1,73 @@
+#spring:
+#  data:
+#    mongodb:
+#      username: judy  # 注意我们使用judy用户，db.createUser({user:"judy",pwd:"123456",roles:[{role:"readWrite",db:"articledb"}]})
+#                           # 实际shell中我们需要在admin数据库使用judy账户登录，然后切换到articledb数据库中进行你的操作
+#                           #  mongo --host 192.168.205.118 --port 27017 --authenticationDatabase admin -u judy -p 123456
+#                           # 以上是连接时直接认证，注意，除非你真的搞了一个和admin一样的库，不然总是在admin中认证  这句话错误  root用户可以在任何数据库内添加用户
+#      password: 123456
+#      host: 192.168.205.118
+#      port: 27017
+#      authentication-database: admin
+#      database: articledb
+
+
+#spring:
+#  data:
+#    mongodb:
+#      username: shaw  # 注意我们使用shaw用户，db.createUser({user:"shaw",pwd:"123456",roles:["readWrite"]})
+#                                  # 这里是在指定数据库可以读写，也就是当前创建用户的数据库 ，即admin数据库， 所以现在的配置失效，无法认证成功
+#
+#                       # 假如我们使用readWriteAnyDatabase权限呢 此时可以了  因为顾名思义是anyDatabase
+#                          #db.createUser({user:"shaw",pwd:"123456",roles:["readWriteAnyDatabase"]})
+#
+#      password: 123456
+#      host: 192.168.205.118
+#      port: 27017
+#      authentication-database: admin
+#      database: articleshaw
+
+####################################非常可笑的是，我总是在admin中添加用户#########################################################
+# 注意我们使用shaw用户，db.createUser({user:"shaw",pwd:"123456",roles:["readWrite"]})
+#                                  # 这里是在指定数据库可以读写，也就是当前创建用户的数据库 ，即admin数据库， 所以现在的配置失效，无法认证成功
+# 这也是以上出现的缘由
+#######其实只要在admin中创建了admin以上的账户之后
+##########################切换至想要加权限的数据库中
+##############################然后再db.createUser({user:"shaw",pwd:"123456",roles:["readWrite"]})，就可以专门对该数据库生效了
+##################################也就是说authentication-database和database保持一致，以至于不需要authentication-database
+spring:
+  data:
+    mongodb:
+#      username: shaw  # 注意我们使用shaw用户，db.createUser({user:"shaw",pwd:"123456",roles:["readWrite"]})
+#        # 这里是在指定数据库可以读写，也就是当前创建用户的数据库 ，即admin数据库， 所以现在的配置失效，无法认证成功
+#
+#        # 假如我们使用readWriteAnyDatabase权限呢 此时可以了  因为顾名思义是anyDatabase
+#      #db.createUser({user:"shaw",pwd:"123456",roles:["readWriteAnyDatabase"]})
+#
+#      password: 123456
+#      host: 192.168.205.118
+#      port: 27117
+#    #  authentication-database: articledb #可以省略  除非你真的在别的数据库里创建用户
+#      database: articledb
+      uri: mongodb://shaw:123456@192.168.205.118:27117/articledb
+
+# 其实uri写对了的话根本不需要去专门写配置文件
+
+
+###############################################################################
+# 副本集怎么配置
+
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb://shaw:123456@192.168.205.118:27017,192.168.205.118:27018,192.168.205.118:27019/articledb?connect=replicaSet&slaveOk=true&replicaSet=my_cluster
+
+
+
+
+
+# 分片集群怎么配置
+
+#  暂时不研究 累死了 分片集群虽然搭起来了  但是不懂原理
+
+
