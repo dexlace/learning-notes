@@ -228,11 +228,11 @@ server 模块使用 7001端口，下面是pom文件需要的依赖：
 
 ```yml
 server:
-port: 7001
+ port: 7001
 
 eureka:
-instance:
- hostname: localhost  # eureka 服务器的实例名称
+ instance:
+  hostname: localhost  # eureka 服务器的实例名称
 
 client:
  # false 代表不向服务注册中心注册自己，因为它本身就是服务中心
