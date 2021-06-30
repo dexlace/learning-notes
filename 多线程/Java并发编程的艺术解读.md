@@ -396,7 +396,7 @@ public class Join {
 
 ##### 5.5 ThreadLocal的使用（重点）
 
-## 三、 第五章：Java中的锁
+## 三、第五章：Java中的锁
 
 #### 1. Lock接口
 
@@ -437,4 +437,190 @@ Lock基本Api
 | void unlock()                                                | 释放锁                                                       |
 | Condition newCondition()                                     | **获取等待通知组件，该组件和当前锁绑定，当前线程只有获取了锁，**才能调用该组件的wait()方法。调用后，当前线程将释放锁 |
 
-nb    
+## 四、第九章：Java中的线程池
+
+### 1. 线程池的创建
+
+```java
+// 最全参数的构造方法
+ThreadPoolExecutor(int corePoolSize, int maximumPoolSize,long keepAliveTime, TimeUnit milliseconds,BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory, RejectedExecutionHandler handler);
+```
+
+#### 1.1 基本线程数corePoolSize
+
+当提交一个任务到线程池时，线程池会创建一个线程来执行任务，即使==其他空闲的基本线程能够执行新任务也会创建线程==，等到需要执行的==任务数大于线程池基本大小时就不再创建==。如果调用了==线程池的prestartAllCoreThreads()方法==， 线程池会提前==创建并启动所有基本线程==。 
+
+#### 1.2 线程池最大数量maximumPoolSize
+
+线程池允许创建的最大线程数。如果==队列满了（肯定大于基本线程数），并且已创建的线程数小于最大线程数==，则线程池会再创建新的线程执行任务。值得注意的是，如果==使用了无界的任务队列这个参数就没什么效果==
+
+#### 1.3 线程活动保持的时间keepAliveTime和单位TimeUnit
+
+==keepAliveTime（线程活动保持时间）==：线程池的工作线程==空闲后，保持存活的时间==。所以， 如果任务很多，并且每个任务执行的时间比较短，可以调大时间，提高线程的利用率。 
+
+==TimeUnit（线程活动保持时间的单位）==：可选的==单位==有天（DAYS）、小时（HOURS）、分钟 （MINUTES）、毫秒（MILLISECONDS）、微秒（MICROSECONDS，千分之一毫秒）和纳秒（NANOSECONDS，千分之一微秒）。
+
+#### 1.4 任务队列BlockingQueue<Runnable> workQueue
+
+用于==保存等待执行的任务的阻塞队列==。可以选择以下几 个阻塞队列。 
+
+- ArrayBlockingQueue：是一个基于数组结构的有界阻塞队列，此队列按FIFO（先进先出）原 则对元素进行排序。 
+
+- LinkedBlockingQueue：一个基于链表结构的阻塞队列，此队列按FIFO排序元素，吞吐量通 常要高ArrayBlockingQueue。静态工厂方法Executors.newFixedThreadPool()使用了这个队列。 
+
+- SynchronousQueue：一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用 移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于Linked-BlockingQueue，静态工 厂方法Executors.newCachedThreadPool使用了这个队列。 
+
+- PriorityBlockingQueue：一个具有优先级的无限阻塞队列。
+
+#### 1.5 线程工厂ThreadFactory
+
+ThreadFactory：用于==设置创建线程的工厂==，可以通过线程工厂给每个创建出来的线程==设置更有意义的名字==。使用开源框架guava提供的ThreadFactoryBuilder可以快速给线程池里的线程设置有意义的名字，代码如下。
+
+```java
+new ThreadFactoryBuilder().setNameFormat("XX-task-%d").build();
+```
+
+#### 1.6 饱和策略RejectedExecutionHandler
+
+当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。在JDK 1.5中Java线程池框架提供了以下4种策略。 
+
+- ==AbortPolicy：直接抛出异常==。 
+
+- CallerRunsPolicy：只用调用者所在线程来运行任务。 
+
+- DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。 
+
+- DiscardPolicy：不处理，丢弃掉。 
+
+当然，也可以根据应用场景需要来实现RejectedExecutionHandler接口自定义策略。如记录 日志或持久化存储不能处理的任务。 
+
+### 2. 线程池的实现原理
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602142225628.png" alt="image-20210602142225628" style="zoom:67%;" />
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602142332671.png" alt="image-20210602142332671" style="zoom:67%;" />
+
+### 3. 向线程池提交任务
+
+可以使用两个方法向线程池提交任务，分别为==execute()==和==submit()==方法。 
+
+execute()方法用于==提交不需要返回值的任务==，所以无法判断任务是否被线程池执行成功。 
+
+submit()方法用于==提交需要返回值的任务==。线程池会==返回一个future类型的对象==，通过这个 future对象可以判断任务是否执行成功，并且可以==通过future的get()方法来获取返回值==，==<font color=red>get()方法会阻塞当前线程直到任务完成，而使用get（long timeout，TimeUnit unit）方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。</font>== 
+
+## 五、第十章：Executor框架
+
+### 1. Executor框架的结构
+
+- 任务：需要实现Runnable接口或者Callable接口
+- 执行单元：==核心接口Executor==以及==继承自Executor的ExecutorService接口==，实现ExecutorService接口的实现类：==<font color=red>ThreadPoolExecutor</font>==和==<font color=red>ScheduledThreadPoolExecutor</font>==
+- 异步计算的结果：包括==接口Future==和实现==Future接口的FutureTask类==。
+
+### 2. Executor框架的成员
+
+#### 2.1 ThreadPoolExecutor
+
+ThreadPoolExecutor通常使用==<font color=red>工厂类Executors</font>==来创建。Executors可以创建3种类型的ThreadPoolExecutor：==SingleThreadExecutor、FixedThreadPool==和==CachedThreadPool==
+
+- ==<font color=red>FixedThreadPool</font>==
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602151223099.png" alt="image-20210602151223099" style="zoom:67%;" />
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602152119300.png" alt="image-20210602152119300" style="zoom:67%;" />
+
+**<font color=red>核心线程数和最大线程数相等</font>**，只要它们满了，就要到队列待了，空闲线程保持存活时间为0，一旦执行完就没了。(==这里把keepAliveTime设置为0L，意味着多余 的空闲线程会被立即终止==)。后续只能新创建线程补充。
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602155918227.png" alt="image-20210602155918227" style="zoom:50%;" />
+
+
+
+FixedThreadPool适用于==资源管理的需求==，而需要==限制当前线程数量的应用场景==，它适用于==负载比较重的服务器==
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602160343662.png" alt="image-20210602160343662" style="zoom: 67%;" />
+
+- ==<font color=red>SingleThreadExecutor</font>==
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602152315233.png" alt="image-20210602152315233" style="zoom:67%;" />
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602152621951.png" alt="image-20210602152621951" style="zoom:67%;" />
+
+SingleThreadExecutor适用于==需要保证顺序地执行各个任务==；并且在任意时间点，不会有多 个线程是活动的应用场景。
+
+==其实是FixedThreadPool的特例，核心线程数和最大线程数为1==
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602160553067.png" alt="image-20210602160553067" style="zoom:67%;" />
+
+
+
+- ==<font color=red>CachedThreadPool</font>==
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602152953777.png" alt="image-20210602152953777" style="zoom:67%;" />
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602153016766.png" alt="image-20210602153016766" style="zoom:67%;" />
+
+CachedThreadPool是==大小无界的线程池==，适用于==执行很多的短期异步任务的小程序==，或者是==负载较轻的服务器==。 
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602161004681.png" alt="image-20210602161004681" style="zoom:67%;" />
+
+#### 2.2 ScheduledThreadPoolExecutor 
+
+ScheduledThreadPoolExecutor通常使用==工厂类Executors==来创建。
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602153644963.png" alt="image-20210602153644963" style="zoom:67%;" />
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602153714992.png" alt="image-20210602153714992" style="zoom:67%;" />
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602153756008.png" alt="image-20210602153756008" style="zoom:67%;" />
+
+ScheduledThreadPoolExecutor适用于==需要多个后台线程执行周期任务==，同时为了满足资源管理的需求而需要限制后台线程的数量的应用场景
+
+<img src="Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF%E8%A7%A3%E8%AF%BB.assets/image-20210602154229431.png" alt="image-20210602154229431" style="zoom:67%;" />
+
+SingleThreadScheduledExecutor适用于需要==单个后台线程执行周期任务==，同时需要保证顺序地执行各个任务的应用场景。
+
+#### 2.3 Future接口
+
+==Future接口==和实现Future接口的==FutureTask类==用来表示==异步计算的结果==。当我们把==Runnable 接口==或==Callable接口==的实现类提交<font color=red>（**submit）**</font>给ThreadPoolExecutor或 ScheduledThreadPoolExecutor时，ThreadPoolExecutor或ScheduledThreadPoolExecutor会向我们返回一个FutureTask对象。下面是对应的API。 
+
+```java
+<T> Future<T> submit(Callable<T> task) 
+<T> Future<T> submit(Runnable task, T result) 
+    Future<> submit(Runnable task)
+```
+
+#### 2.4 Runnable接口和Callable接口
+
+Runnable接口和Callable接口的实现类，都可以被==ThreadPoolExecutor==或==ScheduledThreadPoolExecutor==执行。它们之间的区别是==Runnable不会返回结果==，而==Callable可以返回结果==。
+
+除了可以自己创建实现Callable接口的对象外，还可以使用==<font color=red>工厂类Executors</font>来把一个<font color=red>Runnable包装成一个Callable</font>。== 
+
+```java
+public static Callable<Object> callable(Runnable task) // 假设返回对象Callable1
+```
+
+```java
+public static <T> Callable<T> callable(Runnable task, T result)  // 假设返回对象Callable2
+```
+
+==submit（…）会向我们返回一个FutureTask对象==。我们可以执行==FutureTask.get()方法来等待任务执行完成==。当任务成功完成后 
+
+==FutureTask.get()将返回该任务的结果。==
+
+例如，如果提交的是对象Callable1，==FutureTask.get()方法将返回null==；
+
+如果提交的是对象Callable2，==FutureTask.get()方法将返回result对象==。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

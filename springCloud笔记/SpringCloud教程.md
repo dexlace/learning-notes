@@ -409,6 +409,48 @@ eureka:
 
 > eureka.instance.hostname 才是启动以后 本 Server 的注册地址，而 service-url  是 map 类型，只要保证 key:value 格式就行，它代表 本Server 指向了那些 其它Server 。利用这个，就可以实现Eureka Server 相互之间的注册，从而实现集群的搭建。
 
+### 3.7 实用的Eureka集群实例
+
+不必为很多个Eureka服务器实例去创建一个模块，实际配置如下：
+
+```yml
+############################################################
+server:
+  port: ${port:7070}
+  tomcat:
+    uri-encoding: UTF-8
+
+
+spring:
+  application:
+    name: register
+
+############################################################
+#
+# eureka 配置信息
+#
+############################################################
+eureka:
+  instance:
+    # 集群中每个eureka的名字都是唯一的
+    hostname: register-${server.port}
+  port2: ${port2:7071}
+  port3: ${port3:7072}
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    # 单实例配置自己的服务地址，高可用集群则配置多个地址
+    service-url:
+      defaultZone: http://register-${eureka.port2}:${eureka.port2}/eureka/,http://register-${eureka.port3}:${eureka.port3}/eureka/
+
+```
+
+运行时多复制几个配置，并对对应参数进行配置即可
+
+![image-20210612212518938](SpringCloud%E6%95%99%E7%A8%8B.assets/image-20210612212518938.png)
+
+依赖和注解不变
+
 ### 3.7 Provider集群
 
 > 为提供者，即 cloud-provider-payment8001 模块创建集群，新建模块为 cloud-provider-payment8002，其实复制一下改下==端口号，主启动程序名、pom文件中的名字==、还有就是记得==在父项目中添加cloud-provider-payment8002的项目名==
@@ -1054,7 +1096,7 @@ public class CustomerFeignMain80 {
 
 ==新建一个service==
 
-> 这个service还是 customer 模块的接口，和提供者没有任何关系，不需要包类名一致。它使用起来就相当于是普通的service。
+> 这个service还是 consumer 模块的接口，和提供者没有任何关系，不需要包类名一致。它使用起来就相当于是普通的service。
 >
 > ==推测大致原理，对于这个service 接口，读取它某个方法的注解==（GET或者POST注解不写报错），知道了请求方式和请求地址，而抽象方法，只是对于我们来讲，调用该方法时，可以进行传参等。
 
@@ -1578,6 +1620,8 @@ public class OrderFallbackService implements  OrderService{
 > 	ConnectTimeout: xxx
 > ```
 
+看代码
+
 ### 8.3 服务熔断
 
 > 实际上服务熔断 和 服务降级 没有任何关系，就像 java 和 javaScript
@@ -1648,13 +1692,13 @@ controller:
 >
 > ```yml
 > hystrix:
-> command:
->  default:
->    circuitBreaker:
->      enabled: true
->      requestVolumeThreshold: 10
->      sleepWindowInMilliseconds: 10000
->      errorThresholdPercentage: 60
+> 	command:
+>  		default:
+>    			circuitBreaker:
+>     				 enabled: true
+>     				 requestVolumeThreshold: 10
+>      				 sleepWindowInMilliseconds: 10000
+>      				 errorThresholdPercentage: 60
 > ```
 
 ## 九、服务网关-SpringCloud Gateway
@@ -2150,7 +2194,7 @@ management:
 
 就有下面的消息总线！
 
-## 十一、消息总线
+## 十一、消息总线-SpringCloud Bus
 
 ### 11.1 简介
 
@@ -2289,7 +2333,7 @@ management:
 
 ![1597725365978](images\1597725365978.png)
 
-## 十二、消息驱动
+## 十二、消息驱动-SpringCloud Stream
 
 <img src="SpringCloud%E6%95%99%E7%A8%8B.assets/1597725567239.png" alt="1597725567239" style="zoom: 67%;" />
 
