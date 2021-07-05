@@ -653,3 +653,254 @@ docker run -d -p 9080:8080 --name myt9  \
 
 https://blog.csdn.net/pjsdsg/article/details/90600471
 
+## 九、一个案例
+
+### 9.1 制作微服务镜像
+
+打包imood-security-cloud，只需在总parent工程package即可
+
+注意其中的localhost之类的ip地址之类的配置用`${自定义变量}`暴露出来，如此运行时注意配置相应的变量即可
+
+![image-20210705204849616](Docker%E7%AC%94%E8%AE%B0.assets/image-20210705204849616.png)
+
+有6个模块（`imood-cloud`不算），包括`imood-auth,imood-gateway,imood-monitor-admin,imood-register,imood-server-system,imood-server-test`
+
+![image-20210705205102849](Docker%E7%AC%94%E8%AE%B0.assets/image-20210705205102849.png)
+
+每个模块里有其==对应的jar包==和一个==Dockerfile文件==
+
+这里把对应的Dcokerfile文件列出如下
+
+```dockerfile
+FROM openjdk:8u212-jre # 表示由openjdk:8u212-jre基础镜像构建。因为项目使用的是JDK 1.8，所以要依赖于1.8版本的JDK镜像构建，openjdk官方Docker镜像仓库为https://hub.docker.com/_/openjdk?tab=tags
+MAINTAINER Dexlace 11111111@qq.com  # 作者及其联系方式
+
+COPY imood-auth-1.0-SNAPSHOT.jar /imood/imood-auth-1.0-SNAPSHOT.jar # 表示将当前目录下的imood-auth-1.0-SNAPSHOT.jar 拷贝到镜像中的 /imood目录下
+    
+ENTRYPOINT ["java", "-Xmx256m", "-jar", "/imood/imood-auth-1.0-SNAPSHOT.jar"]
+# 表示运行java -jar运行镜像里的jar包，JVM内存最大分配为256m（因为要运行的微服务较多并且虚拟机内存只有6GB，所以内存分配小了点，实际可以根据宿主服务器的配置做出相应调整）
+```
+
+其余类似
+
+如此得到==六个模块的镜像==如下：
+
+![image-20210705205921705](Docker%E7%AC%94%E8%AE%B0.assets/image-20210705205921705.png)
+
+### 9.2 制作依赖环境的镜像
+
+这里使用Docker-Compose
+
+==docker-compose.yml==
+
+```yml
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7.24
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - 3306:3306
+    volumes:
+      - /home/doglast/software/imood/mysql/data:/var/lib/mysql #挂载 MySQL数据
+  redis:
+    image: redis:4.0.14
+    container_name: redis
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass 123456  --appendonly yes
+    volumes:
+      - /home/doglast/software/imood/redis/data:/data #挂载 Redis数据
+      - /home/doglast/software/imood/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf #挂载 Redis配置
+    ports:
+      - 6379:6379
+
+```
+
+类似于Docker的相关概念，很好理解
+
+运行之，==将得到mysql和redis服务==，我们的微服务依赖于对应的配置
+
+注意相关的==数据卷路径需要提前创建==，注意前面是宿主主机的路径，后者才是镜像中的路径
+
+在==该docker-compose.yml 路径下==，==运行`docker-compose up -d`分别启动以 mysql:5.7.24为版本的容器实例和以redis:4.0.14为版本的镜像实例==
+
+### 9.3 启动各个微服务
+
+在imood-cloud目录下,vim一个==docker-compose.yml==文件
+
+主要是以==微服务制作的镜像为蓝本==，运行之
+
+注意==imood-register之类==的都是各个微服务==application.yml文件的变量==，其在==command==命令下进行配置
+
+注意我们的日志文件在==项目下（镜像目录）的/log==文件夹内，所以我们在宿主主机挂载一个对应的目录`/home/doglast/software/imood/log`以==存放所有日志文件==
+
+```yml
+version: '3'
+
+services:
+  imood-register:
+    image: imood-register:latest # 指定基础镜像，就是上一节中我们自己构建的镜像
+    container_name: imood-register # 容器名称
+    volumes:
+      - "/home/doglast/software/imood/log:/log" #日志挂载 这里可以指定挂载路径
+    command:
+      - "--imood-register=192.168.205.115" # 通过command指定地址变量值
+      - "--imood-monitor-admin=192.168.205.115"
+    ports:
+      - 7001:7001 # 端口映射
+      
+      
+  imood-monitor-admin:
+    image: imood-monitor-admin:latest
+    container_name: imood-monitor-admin
+    volumes:
+      - "/home/doglast/software/imood/log:/log"
+    ports:
+      - 8401:8401
+      
+      
+  imood-gateway:
+    image: imood-gateway:latest
+    container_name: imood-gateway
+    depends_on:
+      - imood-register
+    volumes:
+      - "/home/doglast/software/imood/log:/log"
+    command:
+      - "--imood-register=192.168.205.115"
+      - "--imood-monitor-admin=192.168.205.115"
+    ports:
+      - 8301:8301
+      
+      
+  imood-auth:
+    image: imood-auth:latest
+    container_name: imood-auth
+    depends_on:
+      - imood-register
+    volumes:
+      - "/home/doglast/software/imood/log:/log"
+    command:
+      - "--mysql.url=192.168.205.115"
+      - "--redis.url=192.168.205.115"
+      - "--imood-register=192.168.205.115"
+      - "--imood-monitor-admin=192.168.205.115"
+      
+      
+  imood-server-system:
+    image: imood-server-system:latest
+    container_name: imood-server-system
+    depends_on:
+      - imood-register
+    volumes:
+      - "/home/doglast/software/imood/log:/log"
+    command:
+      - "--mysql.url=192.168.205.115"
+  #    - "--rabbitmq.url=192.168.205.115"
+      - "--imood-register=192.168.205.115"
+      - "--imood-monitor-admin=192.168.205.115"
+      - "--imood-gateway=192.168.205.115"
+      
+      
+  imood-server-test:
+    image: imood-server-test:latest
+    container_name: imood-server-test
+    depends_on:
+      - imood-register
+    volumes:
+      - "/home/doglast/software/imood/log:/log"
+    command:
+  #    - "--rabbitmq.url=192.168.205.115"
+      - "--imood-register=192.168.205.115"
+      - "--imood-monitor-admin=192.168.205.115"
+      - "--imood-gateway=192.168.205.115"
+ 
+```
+
+在该路径下，==运行`docker-compose up -d`==即可启动各个微服务
+
+```bash
+# 停止所有容器实例
+docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
+```
+
+
+
+### 9.4 给一个logback-spring日志配置的范本
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">     <!--scan：当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+                   scanPeriod：设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。
+                   debug：当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。-->
+    <contextName>imood</contextName>
+    <!--这段配置用于引用Spring上下文的变量。通过这段配置，
+    我们可以在logback配置文件中使用${springAppName}来引用配置文件application.yml里的spring.application.name配置值-->
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+    <!--用来定义变量值的标签，有两个属性，name和value；
+    其中name的值是变量的名称，value的值时变量定义的值。
+    通过定义的值会被插入到logger上下文中。定义变量后，可以使${}来使用变量。-->
+    <!--相对项目的相对路径-->
+    <property name="log.path" value="log/imood-auth"/>
+    <!--上面这段配置定义了log.maxHistory变量，用于指定日志文件存储的天数，这里指定为15天。-->
+    <property name="log.maxHistory" value="15"/>
+    <!--这段配置定义了彩色日志打印的格式-->
+    <property name="log.colorPattern"
+              value="%magenta(%d{yyyy-MM-dd HH:mm:ss}) %highlight(%-5level) %boldCyan([${springAppName:-}]) %yellow(%thread) %green(%logger) %msg%n"/>
+    <property name="log.pattern"
+              value="%d{yyyy-MM-dd HH:mm:ss} %-5level [${springAppName:-}] %thread %logger %msg%n"/>
+
+    <!--输出到控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.colorPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--输出到文件-->
+    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/info/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <MaxHistory>${log.maxHistory}</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/error/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+
+    <!--root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性，用来设置打印级别。如果在appender里制定了日志打印的级别，那么root指定的级别将会被覆盖。-->
+    <root level="debug">
+        <appender-ref ref="console"/>
+    </root>
+
+    <root level="info">
+        <appender-ref ref="file_info"/>
+        <appender-ref ref="file_error"/>
+    </root>
+</configuration>
+```
+
+
+
