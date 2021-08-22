@@ -1,0 +1,29 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="rabbitmq_day01:war exploded">
+    <output-path>$PROJECT_DIR$/rabbitmq_day01/target/rabbitmq_day01</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>rabbitmq_day01</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="rabbitmq_day01" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: junit:junit:4.11" />
+          <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.3" />
+          <element id="library" level="project" name="Maven: com.rabbitmq:amqp-client:5.7.2" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.26" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/rabbitmq_day01/target/rabbitmq_day01/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="rabbitmq_day01/web/Web" />
+    </root>
+  </artifact>
+</component>

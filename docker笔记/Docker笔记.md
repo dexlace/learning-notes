@@ -635,7 +635,7 @@ docker run -d -p 9080:8080 --name myt9  \
 >
 > ![image-20210402145602297](Docker%E7%AC%94%E8%AE%B0.assets/image-20210402145602297.png)
 >
-> 四、进入正在运行的mysql中
+> 四、进入正在运行l中
 >
 > ```bash
 > docker exec  -it  mysql容器id /bin/bash
@@ -904,3 +904,4 @@ docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
 
 
 
+dock
