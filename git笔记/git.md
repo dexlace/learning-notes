@@ -427,6 +427,8 @@ git remote show [remote]
 
 ![image-20210312155317252](git.assets/image-20210312155317252.png)
 
+git remote可以使得本地仓与远程仓关联
+
 > ==git push命令==
 
 ```bash
@@ -435,6 +437,8 @@ git remote show [remote]
 # 远程分支名如果和本地分支名一样，则可以省略远程分支名
 git push  远程主机名 本地分支名：远程分支名
 ```
+
+
 
 ## 七、使用码云
 
