@@ -473,7 +473,4 @@ github操作类似
 
 - 添加到暂存区
 - commit 提交
-- push到远程仓库
-
-
-
+- push到远程
