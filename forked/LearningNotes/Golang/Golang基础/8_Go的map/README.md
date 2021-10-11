@@ -2,7 +2,7 @@
 
 ## map的介绍
 
-map是一种无序的基于key-value的数据结构，Go语言中的map是引用类型，必须初始化才能使用。
+map是一种==无序==的基于key-value的数据结构，Go语言中的==map是引用类型，必须初始化才能使用==。
 
 Go语言中map的定义语法如下：
 
@@ -12,12 +12,12 @@ map[KeyType]ValueType
 
 其中：
 
-- KeyType：表示键的类型
-- ValueType：表示键对应的值的类型
+- ==KeyType：表示键的类型==
+- ==ValueType：表示键对应的值的类型==
 
-map类型的变量默认初始值为nil，需要使用make()函数来分配内存。语法为：
+map类型的变量默认初始值为nil，==需要使用make()函数来分配内存==。语法为：
 
-make：用于slice、map和channel的初始化
+==make：用于slice、map和channel的初始化==
 
 示例如下所示：
 
@@ -64,7 +64,7 @@ fmt.Println(value, ok)
 
 ## 使用delete()函数删除键值对
 
-使用delete()内建函数从map中删除一组键值对，delete函数的格式如下所示
+==使用delete()内建函数从map中删除一组键值对==，delete函数的格式如下所示
 
 ```bash
 delete(map 对象, key)
@@ -85,7 +85,7 @@ fmt.Println(userInfo2)
 
 ## 元素为map类型的切片
 
-我们想要在切片里面存放一系列用户的信息，这时候我们就可以定义一个元素为map类型的切片
+我们想要在切片里面存放一系列用户的信息，这时候我们就可以定义==一个元素为map类型的切片==
 
 ```go
 // 切片在中存放map
