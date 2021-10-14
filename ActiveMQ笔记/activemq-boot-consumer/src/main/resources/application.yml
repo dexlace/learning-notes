@@ -1,0 +1,22 @@
+server:
+  port: 8888
+spring:
+  activemq:
+    #你的activemq连接地址
+    broker-url: tcp://192.168.205.103:61616
+    #账号
+    user: admin
+    #密码
+    password: admin
+  jms:
+    #指定连接的是队列(Queue)还是主题(Topic)，false代表队列,true代表主题
+    # 默认是false
+    pub-sub-domain: false
+
+
+# 自定义的队列和主题的名字
+queue:
+  name: boot-queue-test
+
+topic:
+  name: boot-topic-test

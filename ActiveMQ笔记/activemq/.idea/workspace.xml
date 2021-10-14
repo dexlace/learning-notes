@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ab0e0113-f1b3-4ef1-b900-23ccde875493" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="D:\softwareOfDevelopment\repository" />
+        <option name="mavenHome" value="D:/softwareOfDevelopment/apache-maven-3.3.9" />
+        <option name="userSettingsFile" value="D:\softwareOfDevelopment\apache-maven-3.3.9\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1pfO6lYoc7CcvFcB3aETulXjL8U" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.scct.activemq.producer_topic" />
+      <recent name="com.scct.activemq.consumer_topic" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.SpringMQ_Producer">
+    <configuration name="EmbedBroker" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.activemq.broker.EmbedBroker" />
+      <module name="activemq" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.activemq.broker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JmsConsumer_Topic_Persist" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.activemq.consumer_topic.JmsConsumer_Topic_Persist" />
+      <module name="activemq" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.activemq.consumer_topic.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JmsProducer_Topic_Persist" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.activemq.producer_topic.JmsProducer_Topic_Persist" />
+      <module name="activemq" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.activemq.producer_topic.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpringMQ_Consumer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.activemq.spring.SpringMQ_Consumer" />
+      <module name="activemq" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.activemq.spring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpringMQ_Producer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scct.activemq.spring.SpringMQ_Producer" />
+      <module name="activemq" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.scct.activemq.spring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.JmsConsumer_Topic_Persist" />
+      <item itemvalue="Application.JmsProducer_Topic_Persist" />
+      <item itemvalue="Application.EmbedBroker" />
+      <item itemvalue="Application.SpringMQ_Producer" />
+      <item itemvalue="Application.SpringMQ_Consumer" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.SpringMQ_Producer" />
+        <item itemvalue="Application.SpringMQ_Consumer" />
+        <item itemvalue="Application.EmbedBroker" />
+        <item itemvalue="Application.JmsProducer_Topic_Persist" />
+        <item itemvalue="Application.JmsConsumer_Topic_Persist" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ab0e0113-f1b3-4ef1-b900-23ccde875493" name="Default Changelist" comment="" />
+      <created>1615570504596</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615570504596</updated>
+      <workItem from="1615570506945" duration="1378000" />
+      <workItem from="1615599051976" duration="22347000" />
+      <workItem from="1615688519513" duration="31681000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-1942" y="-441" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1615704118015">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state x="-1942" y="-441" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1615704118015" />
+    <state x="-1508" y="-344" key="#com.intellij.ide.util.MemberChooser" timestamp="1615949997581">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state x="-1508" y="-344" key="#com.intellij.ide.util.MemberChooser/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1615949997581" />
+    <state width="999" height="-6" key="GridCell.Tab.0.bottom" timestamp="1615952118246">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="999" height="-6" key="GridCell.Tab.0.bottom/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1615952118246" />
+    <state width="999" height="-6" key="GridCell.Tab.0.center" timestamp="1615952118246">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="999" height="-6" key="GridCell.Tab.0.center/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1615952118246" />
+    <state width="999" height="-6" key="GridCell.Tab.0.left" timestamp="1615952118246">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="999" height="-6" key="GridCell.Tab.0.left/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1615952118246" />
+    <state width="999" height="-6" key="GridCell.Tab.0.right" timestamp="1615952118246">
+      <screen x="-2560" y="-556" width="1707" height="920" />
+    </state>
+    <state width="999" height="-6" key="GridCell.Tab.0.right/0.0.1280.680/-2560.-556.1707.920@-2560.-556.1707.920" timestamp="1615952118246" />
+  </component>
+</project>
