@@ -10,8 +10,8 @@ https://www.liwenzhou.com/posts/Go/14_concurrence/
 
 并行：同一时刻执行多个任务（你和你朋友都在用微信和女朋友聊天）
 
-Go语言的并发通过goroutine 实现。goroutine类似于线程，属于用户态的线程，我们可以根据需要创建成千上万个goroutine 并发工作。goroutine 是由Go语言的运行时（runtime）调度完成，而线程是由操作系统调度完成。
-Go语言还提供channel 在多个goroutine间进行通信。goroutine和channel 是Go语言秉承CSP（Communicating Sequential Process）并发模式的重要实现基础。
+Go语言的并发通过goroutine 实现。goroutine类似于线程，属于用户态的线程，我们可以根据需要创建成千上万个goroutine 并发工作。==goroutine 是由Go语言的运行时（runtime）调度完成，而线程是由操作系统调度完成。==
+Go语言还提供==channel 在多个goroutine间进行通信==。goroutine和channel 是Go语言秉承CSP（Communicating Sequential Process）并发模式的重要实现基础。
 
 > 用户态：表示程序执行用户自己写的程序时
 >
@@ -29,13 +29,13 @@ Go语言中的goroutine就是一种机制，goroutine的概念类似于线程，
 
 ### 使用Goroutine
 
-Go语言中goroutine非常简单，只需要在调用函数的时候，在前面加上go关键字，就可以为一个函数创建一个goroutine
+Go语言中goroutine非常简单，==只需要在调用函数的时候，在前面加上go关键字==，就可以为一个函数创建一个goroutine
 
 一个goroutine必定对应一个函数，可以创建多个goroutine去执行相同的函数
 
 ### 启动goroutine
 
-启动goroutine的方式非常简单，只需要在调用的函数（普通函数和匿名函数）前面加上一个`go`关键字。
+启动goroutine的方式非常简单，只需要==在调用的函数（普通函数和匿名函数）前面加上一个`go`关键字==。
 
 举个例子如下：
 
@@ -84,7 +84,9 @@ func main() {
 
 ### goroutine什么时候结束？
 
- goroutine对应的函数结束了，goroutine就结束了吗，也就是说当我们的main函数执行结束了，那么main函数对应的goroutine也结束了。
+ goroutine对应的函数结束了，goroutine就结束了
+
+当我们的main函数执行结束了，那么main函数对应的goroutine也结束了。
 
 ## goroutine与线程
 
