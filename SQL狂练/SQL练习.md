@@ -261,3 +261,186 @@ having字句可以让我们==**筛选成组合的各种数据**==，where字句�
 ![image-20211104013013058](SQL%E7%BB%83%E4%B9%A0.assets/image-20211104013013058.png)
 
 ![image-20211104013102472](SQL%E7%BB%83%E4%B9%A0.assets/image-20211104013102472.png)
+
+## DAY2
+
+### 1. 当选者
+
+leetcode-574
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105002556733.png" alt="image-20211105002556733" style="zoom:67%;" />
+
+编写sql语句找到当选者的名字
+
+首先要找到==当选者最多的id==
+
+```sql
+  select CandidateId as id
+  from Vote
+  group by CandidateId
+  order by count(id) desc
+  limit 1
+```
+
+确定和Name所在的表的交集关系，所以是==内联结==，以至于最终的结果应该是：
+
+```sql
+select Name
+from Candidate join(
+  select CandidateId as id
+  from Vote
+  group by CandidateId
+  order by count(id) desc
+  limit 1
+) as Winner 
+on Winner.id = Candidate.id
+```
+
+我的问题在于：==`group by`用的不熟，聚合后排序这种用法就是更没接触过==
+
+### 2. 员工奖金
+
+leetcode-577
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105004923723.png" alt="image-20211105004923723" style="zoom:67%;" />
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105005001459.png" alt="image-20211105005001459" style="zoom: 67%;" />
+
+**以下错误答案**，使用的是交集，属于==一种内联==，但其实用的是==外联==
+
+```sql
+select e.name,b.bonus from
+Employee e, (
+    select empId, bonus from Bonus 
+    where bonus<1000 or bonus is null
+
+)as b where e.empId=b.empId
+```
+
+**正确答案**
+
+```sql
+select e.name,b.bonus from
+Employee e left join Bonus b
+on e.empId=b.empId where b.bonus<1000 or b.bonus is null
+```
+
+### 3. 统计各个专业的学生人数
+
+将你的查询结果==按照学生人数降序排列==。 如果==有两个或两个以上专业有相同的学生数目==，将这些专业==按照专业名字的字典序==从小到大排列。
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105010113032.png" alt="image-20211105010113032" style="zoom:67%;" />
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105010138537.png" alt="image-20211105010138537" style="zoom:67%;" />
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105010138537.png" alt="image-20211105010138537" style="zoom:67%;" /<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105012744119.png" alt="image-20211105012744119" style="zoom:67%;" />
+
+
+
+一步步解析，首先查的是`dept_name`和`student_number`,分别来自两个表
+
+先写select啥啥啥吧
+
+```sql
+SELECT
+    dept_name, COUNT(*) AS student_number
+```
+
+from
+
+```sql
+department
+LEFT OUTER JOIN student 
+```
+
+条件
+
+```sql
+ON department.dept_id = student.dept_id
+```
+
+分组和排序
+
+```sql
+  GROUP BY department.dept_name -- 必须先聚合 不去count聚合之前的
+  ORDER BY student_number DESC , department.dept_name -- 按照数字和名字分别排序
+```
+
+==总体sql即==
+
+```sql
+SELECT
+    dept_name, COUNT(*) AS student_number FROM department
+LEFT OUTER JOIN student 
+    ON department.dept_id = student.dept_id
+    GROUP BY department.dept_name
+    ORDER BY student_number DESC , department.dept_name
+
+```
+
+但是count(*)会对不存在数据返回1，实际上，我们可以使用 `COUNT(expression)` 语句，因为如果 `expression is null`，那么这条记录不会被计数。
+
+所以正确答案应该是
+
+```sql
+SELECT
+    dept_name, COUNT(student_id) AS student_number FROM department
+LEFT OUTER JOIN student 
+ON department.dept_id = student.dept_id
+GROUP BY department.dept_name
+ORDER BY student_number DESC , department.dept_name
+;
+
+```
+
+### 4. 订单数最多的用客户
+
+leetcode-586
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105014334019.png" alt="image-20211105014334019" style="zoom:67%;" />
+
+```sql
+select customer_number from orders
+group by customer_number
+order by count(customer_number) desc
+limit 1
+```
+
+和当选者那题部分逻辑一致
+
+### 5. 树节点
+
+leetcode-608
+
+给定一个表 tree，id 是树节点的编号， p_id 是它父节点的 id 。
+
++----+------+
+| id | p_id |
++----+------+
+| 1  | null |
+| 2  | 1    |
+| 3  | 1    |
+| 4  | 2    |
+| 5  | 2    |
++----+------+
+树中每个节点属于以下三种类型之一：
+
+叶子：如果这个节点没有任何孩子节点。
+根：如果这个节点是整棵树的根，即没有父节点。
+内部节点：如果这个节点既不是叶子节点也不是根节点。
+
+
+写一个查询语句，输出所有节点的编号和节点的类型，并将结果按照节点编号排序。上面样例的结果为：
+
+ 
+
++----+------+
+| id | Type |
++----+------+
+| 1  | Root |
+| 2  | Inner|
+| 3  | Leaf |
+| 4  | Leaf |
+| 5  | Leaf |
++----+------+
+
