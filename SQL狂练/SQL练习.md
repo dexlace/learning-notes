@@ -10,7 +10,7 @@
 
 <img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211103223157579.png" alt="image-20211103223157579" style="zoom:80%;" />
 
-### 1. 游戏玩法分析I
+### 1. 游戏玩法分析I-简单题
 
 leetcode-511
 
@@ -48,7 +48,7 @@ group by player_id;
 
 尴尬，**as只是可以省略而已**，意义都一样的，马德，丢人
 
-### 2. 游戏玩法分析II
+### 2. 游戏玩法分析II-简单题
 
 leetcode-512
 
@@ -76,7 +76,7 @@ where (player_id, event_date)
 
 我估计只是看过一个`filed in`一群`value`中的场景，殊不知`多个filed in对应一群value的场景`,也是一样，丢人。
 
-### 3. 游戏玩法分析III
+### 3. 游戏玩法分析III-中等题
 
 leetcode-534
 
@@ -127,7 +127,7 @@ and a.event_date>=b.event_date
 group by a.player_id,a.event_date
 ```
 
-### 4. 游戏玩法分析IV
+### 4. 游戏玩法分析IV-中等题
 
 leetcode-550
 
@@ -224,7 +224,7 @@ FROM Activity) as total
 
 太有意思了，这一题，我从来查过这种东西
 
-### 5. 至少有5名直接下属的经理
+### 5. 至少有5名直接下属的经理-中等题
 
 leetcode-570
 
@@ -264,7 +264,7 @@ having字句可以让我们==**筛选成组合的各种数据**==，where字句�
 
 ## DAY2
 
-### 1. 当选者
+### 1. 当选者-中等题
 
 leetcode-574
 
@@ -298,7 +298,7 @@ on Winner.id = Candidate.id
 
 我的问题在于：==`group by`用的不熟，聚合后排序这种用法就是更没接触过==
 
-### 2. 员工奖金
+### 2. 员工奖金-简单题
 
 leetcode-577
 
@@ -325,7 +325,7 @@ Employee e left join Bonus b
 on e.empId=b.empId where b.bonus<1000 or b.bonus is null
 ```
 
-### 3. 统计各个专业的学生人数
+### 3. 统计各个专业的学生人数-中等题
 
 将你的查询结果==按照学生人数降序排列==。 如果==有两个或两个以上专业有相同的学生数目==，将这些专业==按照专业名字的字典序==从小到大排列。
 
@@ -393,7 +393,7 @@ ORDER BY student_number DESC , department.dept_name
 
 ```
 
-### 4. 订单数最多的用客户
+### 4. 订单数最多的用客户-简单题
 
 leetcode-586
 
@@ -408,39 +408,186 @@ limit 1
 
 和当选者那题部分逻辑一致
 
-### 5. 树节点
+### 5. 组合两个表-凑数题
 
-leetcode-608
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105231403453.png" alt="image-20211105231403453" style="zoom:80%;" />
 
-给定一个表 tree，id 是树节点的编号， p_id 是它父节点的 id 。
+```SQL
+select p.FirstName,p.LastName,a.City,a.State from Person p 
+left join Address a 
+on p.PersonId=a.PersonId
+```
 
-+----+------+
-| id | p_id |
-+----+------+
-| 1  | null |
-| 2  | 1    |
-| 3  | 1    |
-| 4  | 2    |
-| 5  | 2    |
-+----+------+
-树中每个节点属于以下三种类型之一：
+## DAY3
 
-叶子：如果这个节点没有任何孩子节点。
-根：如果这个节点是整棵树的根，即没有父节点。
-内部节点：如果这个节点既不是叶子节点也不是根节点。
+### 1. 第二高的薪水-易错题
+
+leetcode-176 
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105232122915.png" alt="image-20211105232122915" style="zoom: 67%;" />、
+
+很明显是一个`limit`和`offset`的题，但是一定要清楚，可能表只能有一条记录，所以下面的查询是错误的
+
+```sql
+SELECT DISTINCT
+    Salary AS SecondHighestSalary
+FROM
+    Employee
+ORDER BY Salary DESC
+LIMIT 1 OFFSET 1
+```
+
+下面两个解答才是正确答案
+
+```sql
+SELECT
+    (SELECT DISTINCT
+            Salary
+        FROM
+            Employee
+        ORDER BY Salary DESC
+        LIMIT 1 OFFSET 1) AS SecondHighestSalary
+;
+```
+
+```sql
+SELECT
+    IFNULL(
+      (SELECT DISTINCT Salary
+       FROM Employee
+       ORDER BY Salary DESC
+        LIMIT 1 OFFSET 1),
+    NULL) AS SecondHighestSalary
+;
+```
+
+### 2. 连续出现的数字-中等题
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105233037232.png" alt="image-20211105233037232" style="zoom:80%;" />
+我的障碍在于根本不会太往==查多次表的方向想==，弱者思维
+
+我们需要添加关键字 `DISTINCT` ，因为==如果一个数字连续出现超过 3 次，会返回重复元素。==
+
+```sql
+SELECT DISTINCT
+    l1.Num AS ConsecutiveNums
+FROM
+    Logs l1,
+    Logs l2,
+    Logs l3
+WHERE
+    l1.Id = l2.Id - 1
+    AND l2.Id = l3.Id - 1
+    AND l1.Num = l2.Num
+    AND l2.Num = l3.Num
+;
+```
+
+### 3. 计算特殊奖金-简单题
+
+leetcode-1873
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211105234756079.png" alt="image-20211105234756079" style="zoom:67%;" />
+
+```sql
+--解法一：
+select
+    employee_id,
+    if(
+        employee_id&1 and name regexp '^[^M]',
+        salary,
+        0
+    ) as bonus
+from employees
+order by employee_id;
+
+--解法二：
+select
+    employee_id,
+    if(
+        employee_id&1 and name not like 'M%',
+        salary,
+        0
+    ) as bonus
+from employees
+order by employee_id;
+--解法三：
 
 
-写一个查询语句，输出所有节点的编号和节点的类型，并将结果按照节点编号排序。上面样例的结果为：
+select
+    employee_id,
+    if(
+        employee_id%2=1 and name not like 'M%',
+        salary,
+        0
+    ) as bonus
+from employees
+order by employee_id;
 
- 
+----解法四：
+select
+    employee_id,
+    if(
+        mod(employee_id, 2)=1 and name not like 'M%',
+        salary,
+        0
+    ) as bonus
+from employees
+order by employee_id;
 
-+----+------+
-| id | Type |
-+----+------+
-| 1  | Root |
-| 2  | Inner|
-| 3  | Leaf |
-| 4  | Leaf |
-| 5  | Leaf |
-+----+------+
+
+--解法五：
+select
+    employee_id,
+    if(
+        employee_id&1 and left(name, 1)<>'M',
+        salary,
+        0
+    ) as bonus
+from employees
+order by employee_id;
+
+--解法六：
+select
+    employee_id,
+    salary * (
+        employee_id&1 and left(name, 1)<>'M'
+    ) as bonus
+from employees
+order by employee_id;
+
+--解法七：
+select
+    employee_id,
+    salary * (
+        employee_id&1 and substr(name, 1, 1)<>'M'
+    ) as bonus
+from employees
+order by employee_id;
+
+--注意：
+
+--substr和substring都可以。
+
+```
+
+==这道题的目的表明==我不在sql中写if语句，其实这里的`if相当于java中的三目运算符`
+
+### 4. 换座位-中等题
+
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211106000327235.png" alt="image-20211106000327235" style="zoom:67%;" />
+
+==这道题的目的是==我不会写`case,when`
+
+
+
+
+
+
+
+
+
+
+
+
 
