@@ -573,11 +573,22 @@ order by employee_id;
 
 ==这道题的目的表明==我不在sql中写if语句，其实这里的`if相当于java中的三目运算符`
 
-### 4. 换座位-中等题
+### 4. 查询回答率最高的问题-中等题
 
-<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211106000327235.png" alt="image-20211106000327235" style="zoom:67%;" />
+<img src="SQL%E7%BB%83%E4%B9%A0.assets/image-20211108230754463.png" alt="image-20211108230754463" style="zoom:80%;" />
 
-==这道题的目的是==我不会写`case,when`
+```SQL
+select   question_id  as survey_log  from SurveyLog
+group by question_id
+order by sum(if(action = 'answer', 1, 0)) / sum(if(action = 'show', 1, 0)) desc
+limit 1
+```
+
+又是分组排序
+
+
+
+
 
 
 
