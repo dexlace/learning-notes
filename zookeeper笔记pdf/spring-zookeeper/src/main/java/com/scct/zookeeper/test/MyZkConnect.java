@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 /**
+ * zk及其增删改查
  * @Author: xiaogongbing
  * @Description:
  * @Date: 2021/2/27
@@ -23,7 +24,7 @@ public class MyZkConnect {
     public static final String zkServerClusterConnect = "192.168.205.100:2181,192.168.205.101:2181,192.168.205.102:2181";
 
     //单一节点
-    public static final String zkServerSingleConnect = "192.168.205.100:2181";
+    public static final String zkServerSingleConnect = "127.0.0.1:2181";
 
     //超时毫秒数
     public static final int timeout = 3000;
@@ -41,7 +42,7 @@ public class MyZkConnect {
         //ZooKeeper zk2 = reconnect(sessionId, sessionPasswd);
 
         /**创建节点**/
-//        create(zk, "/myzk", "myzk");
+        create(zk, "/myzk", "myzk");
 //        create(zk, "/create/node1", "node1");
 //        create(zk, "/create/node2", "node2");
 //        create(zk, "/create/node3", "node3");
@@ -57,7 +58,7 @@ public class MyZkConnect {
 //        update(zk, "/myzk", "myzk-update");
 
         /**删除节点**/
-        delete(zk, "/myzk");
+//        delete(zk, "/myzk");
     }
 
 
@@ -69,7 +70,7 @@ public class MyZkConnect {
     public static ZooKeeper connect() throws IOException, InterruptedException{
         CountDownLatch cdl = new CountDownLatch(1);
         log.info("准备建立zk服务");
-        ZooKeeper zk = new ZooKeeper(zkServerClusterConnect, timeout, new MyZkWatcher(cdl,"建立连接"));
+        ZooKeeper zk = new ZooKeeper(zkServerSingleConnect, timeout, new MyZkWatcher(cdl,"建立连接"));
         log.info("完成建立zk服务");
         cdl.await();//这里为了等待wather监听事件结束
         return zk;
@@ -78,8 +79,6 @@ public class MyZkConnect {
 
 
     /**
-     * 描述：重新连接服务
-     * 作者：七脉
      * @param sessionId 现有会话ID
      * @param sessionPasswd 现有会话密码
      * @return
@@ -97,8 +96,7 @@ public class MyZkConnect {
     }
 
     /**
-     * 描述：创建节点
-     * 作者：七脉
+     *
      * @param zk
      * @param nodePath
      * @param nodeData
@@ -135,8 +133,8 @@ public class MyZkConnect {
 
         // 3. auth授权模式
         // 添加授权用户
-        // 注意进入验证的命令是：addauth digest Judy:ILoveU
-//        zk.addAuthInfo("digest","Judy:ILoveU".getBytes());
+        // 注意进入验证的命令是：
+
 //        zk.addAuthInfo("digest","ZhangSan:IHateU".getBytes());
 //        List<ACL> acls=new ArrayList<ACL>();
 //        Id id=new Id("auth","ZhangSan");
@@ -167,8 +165,7 @@ public class MyZkConnect {
     }
 
     /**
-     * 描述：查询节点结构信息
-     * 作者：七脉
+     * 查询节点的状态
      * @param zk
      * @param nodePath
      * @return
@@ -183,8 +180,7 @@ public class MyZkConnect {
     }
 
     /**
-     * 描述：查询节点Data值信息
-     * 作者：七脉
+     * 查询节点值
      * @param zk
      * @param nodePath
      * @return
@@ -200,8 +196,7 @@ public class MyZkConnect {
 
 
     /**
-     * 描述：修改节点
-     * 作者：七脉
+
      * @param zk
      * @param nodePath
      * @param nodeData
@@ -221,8 +216,6 @@ public class MyZkConnect {
     }
 
     /**
-     * 描述：删除节点
-     * 作者：七脉
      * @param zk
      * @param nodePath
      * @throws InterruptedException

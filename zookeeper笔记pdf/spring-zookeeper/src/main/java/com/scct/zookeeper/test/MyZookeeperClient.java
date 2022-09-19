@@ -7,6 +7,7 @@ import org.apache.zookeeper.ZooKeeper;
 import java.util.concurrent.CountDownLatch;
 
 /**
+ * 一个普通的zk连接
  * @Author: xiaogongbing
  * @Description:
  * @Date: 2021/2/28
@@ -15,7 +16,7 @@ public class MyZookeeperClient {
     public static void main(String[] args) {
         try {
             CountDownLatch countDownLatch=new CountDownLatch(1);
-            ZooKeeper zooKeeper=new ZooKeeper("192.168.205.100", 1000, new Watcher() {
+            ZooKeeper zooKeeper=new ZooKeeper("127.0.0.1", 1000, new Watcher() {
                 @Override
                 public void process(WatchedEvent watchedEvent) {
                     if(watchedEvent.getState()==Event.KeeperState.SyncConnected){
@@ -26,6 +27,7 @@ public class MyZookeeperClient {
                 }
             });
             // await()方法会阻塞住线程，直到countDownlatch减为0
+            // 这和go的wait group一样
             countDownLatch.await();
             // 会话编号
             System.out.println(zooKeeper.getSessionId());

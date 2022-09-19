@@ -12,17 +12,17 @@ import java.util.concurrent.CountDownLatch;
  * @Description:
  * @Date: 2021/3/3
  */
-public class MyLock {
+public class DistributeLock {
     // ZK的连接地址
-    String IP = "192.168.205.100:2181,192.168.205.101:2181,192.168.205.102:2181";
+    String IP = "127.0.0.1:2181";
     // 计数器对象
     CountDownLatch countDownLatch = new CountDownLatch(1);
 
     // zookeeper配置信息
     ZooKeeper zooKeeper;
 
-    private static final String LOCK_ROOT_PATH = "/Locks";
-    private static final String LOCK_NODE_NAME = "Lock_";
+    private static final String LOCK_ROOT_PATH = "/Locks/Unique";
+    private static final String LOCK_NODE_NAME = "Tickets_";
     // 完整的临时有序节点路径
     private String lockPath;
 
@@ -40,7 +40,7 @@ public class MyLock {
         }
     };
 
-    public MyLock() {
+    public DistributeLock() {
         try {
             zooKeeper = new ZooKeeper(IP, 5000, new Watcher() {
                 @Override
@@ -74,31 +74,33 @@ public class MyLock {
         if (stat == null) {
             zooKeeper.create(LOCK_ROOT_PATH, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         }
-        // 创建了临时有序节点
+        // 创建了临时有序节点 /Locks/Unique/Tickets__0000000000   /Locks/Unique/Tickets__0000000001
         lockPath = zooKeeper.create(LOCK_ROOT_PATH + "/" + LOCK_NODE_NAME, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
-        System.out.println("节点创建成功" + lockPath);
+        System.err.println("节点创建成功" + lockPath);
     }
 
+    // 定义最小的节点是锁的持有者
     private void attemptLock() throws Exception {
-        // 获取Locks节点下的所有节点
+        // 1. 获取Locks节点下的所有节点
         List<String> list = zooKeeper.getChildren(LOCK_ROOT_PATH, false);
         //对子节点进行排序
         Collections.sort(list);
 
-        // 因为随时访问之后会删除节点，所以要看当前的节点是否在最前面
-        int index = list.indexOf(lockPath.substring(LOCK_ROOT_PATH.length() + 1));
+        // 2. 拿到当前的节点的位置的索引
+        String curName = lockPath.substring(LOCK_ROOT_PATH.length() + 1);
+        int index = list.indexOf(curName);
         if (index == 0) {
-            System.out.println("获取锁成功！");
+            System.err.println("节点获取锁成功："+curName);
             return;
         } else {
-            // 上一个节点的路径,这里只有名称，不是完整路径
+            // 3. 否则拿到上一个节点的路径, 盯着上一个节点
             String path = list.get(index - 1);
             Stat stat = zooKeeper.exists(LOCK_ROOT_PATH + "/" + path, watcher);
             if (null == stat) {
-                // 怕的是上一个节点在上述的查找过程中被删除了，所以尝试再次尝试获取锁
+                // 4. 怕的是上一个节点在上述的查找过程中被删除了，所以尝试再次尝试获取锁
                 attemptLock();
             } else {
-                // 如果没删除，那么就监视上一个节点
+                // 5. 如果没删除，那么就监视上一个节点
                 synchronized (watcher) {
                     watcher.wait();
                 }
@@ -112,7 +114,7 @@ public class MyLock {
         // 删除临时有序节点
         zooKeeper.delete(this.lockPath, -1);
         zooKeeper.close();
-        System.out.println("锁已经释放:" + this.lockPath);
+        System.err.println("锁已经释放:" + this.lockPath);
     }
 
 

@@ -1,6 +1,5 @@
 package com.scct.zookeeper.test.cases;
 
-import com.scct.zookeeper.test.watcher.ZKConnectionWatcher;
 import org.apache.zookeeper.*;
 
 import java.util.concurrent.CountDownLatch;
@@ -12,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class GloballyUniqueId implements Watcher {
     // zk的连接串
-    String IP = "192.168.205.101:2181";
+    String IP = "127.0.0.1:2181";
     // 计数器对象
     CountDownLatch countDownLatch = new CountDownLatch(1);
     // 连接对象
@@ -34,7 +33,7 @@ public class GloballyUniqueId implements Watcher {
                 } else if (event.getState() == Event.KeeperState.Expired) {
                     System.out.println("连接超时!");
                     // 超时后服务器端已经将连接释放，需要重新连接服务器端
-                    zooKeeper = new ZooKeeper("192.168.205.100:2181", 6000, new ZKConnectionWatcher());
+                    zooKeeper = new ZooKeeper("127.0.0.1:2181", 6000, new GloballyUniqueId());
                 } else if (event.getState() == Event.KeeperState.AuthFailed) {
                     System.out.println("验证失败!");
                 }
@@ -67,15 +66,16 @@ public class GloballyUniqueId implements Watcher {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+//        System.err.println("path: "+path);
         // /uniqueId0000000001 截取id号
         return path.substring(9);
     }
 
     public static void main(String[] args) {
         GloballyUniqueId globallyUniqueId = new GloballyUniqueId();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 100; i++) {
             String id = globallyUniqueId.getUniqueId();
-            System.out.println(id);
+            System.err.println(Long.parseLong(id));
         }
     }
 

@@ -33,7 +33,7 @@ public class ZKConnectionWatcher implements Watcher {
                     // 会话session失效
                 } else if (event.getState() == Event.KeeperState.Expired) {
                     System.out.println("会话超时!");
-                    zooKeeper = new ZooKeeper("192.168.205.100:2181", 5000, new ZKConnectionWatcher());
+                    zooKeeper = new ZooKeeper("127.0.0.1:2181", 5000, new ZKConnectionWatcher());
                   // 身份认证失败
                 } else if (event.getState() == Event.KeeperState.AuthFailed) {
                     System.out.println("认证失败！"); } }

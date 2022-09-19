@@ -21,7 +21,7 @@ public class TicketSeller {
     }
 
     public void sellTicketWithLock() throws Exception {
-        MyLock lock = new MyLock();
+        DistributeLock lock = new DistributeLock();
         // 获取锁
         lock.acquireLock();
         sell();
