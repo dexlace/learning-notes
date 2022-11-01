@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d61a7e9-230c-44f8-b3fa-4407f059bc11" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/config/center/ConfigCenterTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/config/center/ConnectionWatcher.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/config/center/MyConf.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/config/center/NodeWatcher.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/config/center/ZkConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/$PROJECT_FILE$" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/qaplug_profiles.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spring-zookeeper.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/MyZkConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/MyZkConnect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/MyZookeeperClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/MyZookeeperClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/GloballyUniqueId.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/GloballyUniqueId.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/lock/MyLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/lock/DistributeLock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/lock/TicketSeller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/cases/lock/TicketSeller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/watcher/ZKConnectionWatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/scct/zookeeper/test/watcher/ZKConnectionWatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../zookeeper-01.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../zookeeper-01.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../JUC与多线程/Java并发编程的艺术.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../JUC与多线程/Java并发编程的艺术.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../vnote存档/Markdown/笔试面试/多线程.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../vnote存档/Markdown/笔试面试/多线程.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,19 +122,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ConfigCenterTest.testContent" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="spring-zookeeper" />
       <extension name="coverage">
@@ -224,11 +194,11 @@
     </configuration>
     <list>
       <item itemvalue="Application.GloballyUniqueId" />
-      <item itemvalue="Spring Boot.ZookeeperMain" />
       <item itemvalue="Application.MyZkConnect" />
-      <item itemvalue="JUnit.ConfigCenterTest.testContent" />
       <item itemvalue="Application.DLockTest" />
       <item itemvalue="Application.TicketSeller" />
+      <item itemvalue="JUnit.ConfigCenterTest.testContent" />
+      <item itemvalue="Spring Boot.ZookeeperMain" />
     </list>
     <recent_temporary>
       <list>
@@ -260,7 +230,9 @@
       <workItem from="1663444775535" duration="1028000" />
       <workItem from="1663482819918" duration="188000" />
       <workItem from="1663483163558" duration="1479000" />
-      <workItem from="1663484663760" duration="39894000" />
+      <workItem from="1663484663760" duration="41967000" />
+      <workItem from="1665499401871" duration="598000" />
+      <workItem from="1665851475934" duration="598000" />
     </task>
     <servers />
   </component>

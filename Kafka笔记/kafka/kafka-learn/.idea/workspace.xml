@@ -1,7 +1,156 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="2bfd8142-340b-427d-a55a-ca7c5a3dbd31" name="Default Changelist" comment="" />
+    <list default="true" id="2bfd8142-340b-427d-a55a-ca7c5a3dbd31" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../kafka-spring/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kafka-spring/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../JUC与多线程/Java并发编程的艺术.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../../JUC与多线程/Java并发编程的艺术.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/$PROJECT_FILE$" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_classic_1_2_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_core_1_2_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_12_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_12_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_12_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jdk8_2_12_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jsr310_2_12_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_parameter_names_2_12_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_jayway_jsonpath_json_path_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_vaadin_external_google_android_json_0_0_20131108_vaadin1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_activation_jakarta_activation_api_1_2_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_annotation_jakarta_annotation_api_1_3_5.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_xml_bind_jakarta_xml_bind_api_2_3_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_bytebuddy_byte_buddy_1_10_22.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_bytebuddy_byte_buddy_agent_1_10_22.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_jpountz_lz4_lz4_1_3_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_minidev_accessors_smart_2_4_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_minidev_json_smart_2_4_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_kafka_kafka_clients_0_11_0_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_14_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_logging_log4j_log4j_to_slf4j_2_14_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_core_9_0_46.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_el_9_0_46.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_websocket_9_0_46.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_1_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_assertj_assertj_core_3_19_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_2_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_5_7_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_api_5_7_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_engine_5_7_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_params_5_7_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_commons_1_7_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_engine_1_7_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_core_3_9_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_junit_jupiter_3_9_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_3_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_opentest4j_opentest4j_1_2_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_9_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_skyscreamer_jsonassert_1_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_30.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_30.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_5_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_aop_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_beans_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_core_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_expression_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_jcl_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_test_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_web_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_webmvc_5_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_xerial_snappy_snappy_java_1_1_2_6.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_xmlunit_xmlunit_core_2_8_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_yaml_snakeyaml_1_28.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/qaplug_profiles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__ch_qos_logback_logback_classic_1_2_3.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__ch_qos_logback_logback_classic_1_2_3.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__ch_qos_logback_logback_core_1_2_3.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__ch_qos_logback_logback_core_1_2_3.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_classmate_1_3_4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_classmate_1_3_4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_9_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_9_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_9_8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_9_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_9_8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_9_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jdk8_2_9_8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jdk8_2_9_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jsr310_2_9_8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jsr310_2_9_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_parameter_names_2_9_8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_parameter_names_2_9_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_jayway_jsonpath_json_path_2_4_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_jayway_jsonpath_json_path_2_4_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_vaadin_external_google_android_json_0_0_20131108_vaadin1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__com_vaadin_external_google_android_json_0_0_20131108_vaadin1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_api_1_6_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_api_1_6_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_collectionschema_1_6_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_collectionschema_1_6_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_core_1_6_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_core_1_6_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_runtime_1_6_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__io_protostuff_protostuff_runtime_1_6_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__javax_annotation_javax_annotation_api_1_3_2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__javax_annotation_javax_annotation_api_1_3_2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__javax_validation_validation_api_2_0_1_Final.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__javax_validation_validation_api_2_0_1_Final.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__junit_junit_4_12.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__junit_junit_4_12.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_bytebuddy_byte_buddy_1_7_11.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_bytebuddy_byte_buddy_1_7_11.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_bytebuddy_byte_buddy_agent_1_7_11.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_bytebuddy_byte_buddy_agent_1_7_11.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_minidev_accessors_smart_1_2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_minidev_accessors_smart_1_2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_minidev_json_smart_2_3.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__net_minidev_json_smart_2_3.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_kafka_kafka_clients_1_0_2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_kafka_kafka_clients_1_0_2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_10_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_10_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_logging_log4j_log4j_to_slf4j_2_10_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_logging_log4j_log4j_to_slf4j_2_10_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_core_8_5_39.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_core_8_5_39.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_el_8_5_39.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_el_8_5_39.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_websocket_8_5_39.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_websocket_8_5_39.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_assertj_assertj_core_3_9_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_assertj_assertj_core_3_9_1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_hamcrest_hamcrest_library_1_3.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_hamcrest_hamcrest_library_1_3.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_hibernate_validator_hibernate_validator_6_0_16_Final.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_hibernate_validator_hibernate_validator_6_0_16_Final.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_3_2_Final.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_3_2_Final.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_lz4_lz4_java_1_4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_lz4_lz4_java_1_4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_mockito_mockito_core_2_15_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_mockito_mockito_core_2_15_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_objenesis_objenesis_2_6.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_objenesis_objenesis_2_6.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_ow2_asm_asm_5_0_4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_ow2_asm_asm_5_0_4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_projectlombok_lombok_1_16_18.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_projectlombok_lombok_1_16_18.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_skyscreamer_jsonassert_1_5_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_skyscreamer_jsonassert_1_5_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_26.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_26.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_26.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_26.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_0_9_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_0_9_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_kafka_spring_kafka_2_1_1_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_kafka_spring_kafka_2_1_1_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_retry_spring_retry_1_2_4_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_retry_spring_retry_1_2_4_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_aop_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_aop_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_beans_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_beans_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_context_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_context_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_core_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_core_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_expression_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_expression_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_jcl_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_jcl_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_messaging_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_messaging_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_test_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_test_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_tx_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_tx_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_web_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_web_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_webmvc_5_0_13_RELEASE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_springframework_spring_webmvc_5_0_13_RELEASE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_xerial_snappy_snappy_java_1_1_4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_xerial_snappy_snappy_java_1_1_4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_xmlunit_xmlunit_core_2_5_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_xmlunit_xmlunit_core_2_5_1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_yaml_snakeyaml_1_19.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/libraries/Maven__org_yaml_snakeyaml_1_19.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kafka-spring/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kafka-spring/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../vnote存档/Markdown/笔试面试/多线程.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../vnote存档/Markdown/笔试面试/多线程.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../zookeeper笔记pdf/spring-zookeeper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../zookeeper笔记pdf/spring-zookeeper/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../自问自答/自问自答.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../自问自答/自问自答.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,31 +163,30 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="localRepository" value="D:\softwareOfDevelopment\repository" />
-        <option name="mavenHome" value="D:/softwareOfDevelopment/apache-maven-3.3.9" />
-        <option name="userSettingsFile" value="D:\softwareOfDevelopment\apache-maven-3.3.9\conf\settings.xml" />
+        <option name="mavenHome" value="$USER_HOME$/develop-software/apache-maven-3.5.4" />
+        <option name="userSettingsFile" value="$USER_HOME$/develop-software/apache-maven-3.5.4/conf/settings.xml" />
       </MavenGeneralSettings>
-    </option>
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="importAutomatically" value="true" />
-      </MavenImportingSettings>
     </option>
   </component>
   <component name="ProjectId" id="1t4YaQkaZpOghIZkV2l7KXwwhBX" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/dexlace/kafka/consumer" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Colors" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -99,6 +247,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="KafkaLearnApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="kafka-learn" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.dexlace.kafka.KafkaLearnApplication" />
@@ -127,6 +286,7 @@
       </list>
     </option>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -143,24 +303,22 @@
       <workItem from="1622703952024" duration="2074000" />
       <workItem from="1622797298494" duration="1878000" />
       <workItem from="1622855561071" duration="630000" />
+      <workItem from="1666856990541" duration="3356000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="-2205" y="-399" key="SettingsEditor" timestamp="1622081528318">
-      <screen x="-2560" y="-502" width="1707" height="920" />
-    </state>
-    <state x="-2205" y="-399" key="SettingsEditor/0.0.1280.680/-2560.-502.1707.920@-2560.-502.1707.920" timestamp="1622081528318" />
-    <state x="-2319" y="-344" key="new project wizard" timestamp="1622684578739">
-      <screen x="-2560" y="-502" width="1707" height="920" />
-    </state>
-    <state x="-2319" y="-344" key="new project wizard/0.0.1280.680/-2560.-502.1707.920@-2560.-502.1707.920" timestamp="1622684578739" />
-    <state x="-2044" y="-307" width="672" height="678" key="search.everywhere.popup" timestamp="1622042697184">
-      <screen x="-2560" y="-502" width="1707" height="920" />
-    </state>
-    <state x="-2044" y="-307" width="672" height="678" key="search.everywhere.popup/0.0.1280.680/-2560.-502.1707.920@-2560.-502.1707.920" timestamp="1622042697184" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
